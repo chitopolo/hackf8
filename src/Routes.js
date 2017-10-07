@@ -9,8 +9,12 @@ import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
+  Polyline
 } from "react-google-maps";
+import {Link} from 'react-router-dom'
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+
+var drawPolyline = []
 
 const MapWithADrawingManager = compose(
   withProps({
@@ -24,20 +28,19 @@ const MapWithADrawingManager = compose(
 )(props =>
   <GoogleMap
     defaultZoom={15}
-    defaultCenter={new google.maps.LatLng(-17.413977, -66.165322)}
+    defaultCenter={new google.maps.LatLng(parseFloat(props.lat), parseFloat(props.lon))}
   >
     <DrawingManager
       defaultDrawingMode={google.maps.drawing.OverlayType.POLYLINE}
-      onPolylineComplete={(stuff)=>{console.log(stuff.getPath().getArray().toString())}}
+      onPolylineComplete={(stuff)=>{
+      drawPolyline = stuff.getPath().getArray()
+        }}
       defaultOptions={{
         drawingControl: true,
         drawingControlOptions: {
           position: google.maps.ControlPosition.TOP_CENTER,
           drawingModes: [
-            google.maps.drawing.OverlayType.CIRCLE,
-            google.maps.drawing.OverlayType.POLYGON,
             google.maps.drawing.OverlayType.POLYLINE,
-            google.maps.drawing.OverlayType.RECTANGLE,
           ],
         },
         circleOptions: {
@@ -86,7 +89,10 @@ export class RouteCreator extends Component {
 			distance:'',
 			description:'',
 			level:'',
-			files:[]
+      files:[],
+      polyline:[],
+      actualLat:0,
+      actualLon:0
 		}
 	}
 
@@ -98,8 +104,61 @@ export class RouteCreator extends Component {
       [name]: value
     });
   }
+  
+
+  componentDidMount(){
+    var that = this
+const getLocation = () => {
+const geolocation = navigator.geolocation;
+
+const location = new Promise((resolve, reject) => {
+    if (!geolocation) {
+    reject(new Error('Not Supported'));
+    }
+    
+    geolocation.getCurrentPosition((position) => {
+    resolve(position);
+    }, () => {
+    reject (new Error('Permission denied'));
+    });
+});
+
+return location
+
+};
+
+    getLocation().then(function(result){
+        console.log(result.coords)
+        that.setState({
+            actualLat:result.coords.latitude,
+            actualLon:result.coords.longitude
+        })
+    })
+}
+  confirmPolyline = () => {
+
+      var markers = []
+    _.each(drawPolyline, function(value, key){ 
+      console.log('inside the map')
+
+      var value= value.toString().replace(/[()]/g, '').split(',')
+      console.log('value=>', value)
+      var obj = {lat: parseFloat(value[0]), lng:  parseFloat(value[1])}
+       markers.push(obj)
+       console.log('markers: ', markers)
+    })
+
+
+    this.setState({
+      polyline: markers
+    })
+    console.log('state after confirm polyline: ', drawPolyline.toString(), ' item 0: ', drawPolyline[0], ' item 0 to string  ', drawPolyline[0].toString(), ' markers: ', markers)
+  }
+
   addItem =()=>{
-  	var routes = firebaseDb.ref('routes')
+    var routes = firebaseDb.ref('routes')
+   
+    console.log("polyline: ", drawPolyline)
   	routes.push(this.state)
   }
 
@@ -126,8 +185,11 @@ export class RouteCreator extends Component {
 		return (
 			<div>
 			<Row>
+    
+      {(this.state.actualLat && this.state.actualLat)? 
+        <MapWithADrawingManager lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
 
-		<MapWithADrawingManager />
+    <Button onClick={this.confirmPolyline} block bsStyle="success">Confirmar</Button>
 			<Col md={3}>
 			  <Dropzone onDrop={this.onDrop}  style={{height:'90px', border:'1px dashed #ccc', padding:'20px'}}>
 				              Suelta la imagen aquí.
@@ -202,7 +264,7 @@ export class RoutesList extends Component {
 						<td>{value.description}</td>
 						<td>{value.level}</td>
 						<td>
-						<Button block bsSize="xsmall" bsStyle="info">Ver</Button>
+						<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
 						<Button block  bsSize="xsmall" bsStyle="warning">editar</Button>
 						<Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button>
 						</td>

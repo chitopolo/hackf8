@@ -4,6 +4,7 @@ import Home from './Home';
 import About from './About';
 import Topics from './Topics';
 import Routes from './Routes';
+import RouteView from './Route';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {LinkContainer} from 'react-router-bootstrap'
@@ -56,6 +57,7 @@ class Menu extends Component {
 
         <Route path="/about" component={About}/>
         <Route path="/routes" component={Routes}/>
+        <Route path="/route/:key" component={RouteView}/>
         <Route path="/topics" component={Topics}/>
         </Grid>
       </div>
