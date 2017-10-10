@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Table, Button, Row, Col, Grid, ControlLabel, FormGroup, FormControl} from  'react-bootstrap'
+import {Table, Button, Row, Col, Grid, ControlLabel, FormGroup, FormControl, Image} from  'react-bootstrap'
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
 import _ from 'underscore'
 import Dropzone from 'react-dropzone'
@@ -74,8 +74,10 @@ export default class Routes extends React.Component {
   render() {
     return (
       <div>
-      	<h1>Rutas</h1>
+      	
       	<RouteCreator />
+        <br/>
+
       	<RoutesList />
       </div>
     );
@@ -94,6 +96,7 @@ export class RouteCreator extends Component {
 			description:'',
 			level:'',
       files:[],
+      city:'',
       polyline:[],
       actualLat:0,
       actualLon:0
@@ -163,7 +166,19 @@ return location
     var routes = firebaseDb.ref('routes')
    
     console.log("polyline: ", drawPolyline)
-  	routes.push(this.state)
+  	routes.push({
+      title:this.state.title,
+      distance:this.state.distance,
+      description:this.state.description,
+      level:this.state.level,
+      files:this.state.files,
+      city:this.state.city,
+      country:this.state.country,
+      state:this.state.state,
+      polyline:this.state.polyline,
+      actualLat:this.state.actualLat,
+      actualLon:this.state.actualLon
+    })
   }
 
    onMarkerClick = (props, marker, e) => {
@@ -171,11 +186,11 @@ return location
 
   selectCountry = (val) => {
     console.log('val country:', val)
-    this.setState({shippingCountry: val});
+    this.setState({country: val});
   }
 
   selectRegion = (val)=> {
-    this.setState({shippingState: val});
+    this.setState({state: val});
   }
 
 
@@ -198,7 +213,7 @@ return location
 		return (
 			<div>
 			<Row>
-    
+    <h1>Creador de Rutas</h1>
       {(this.state.actualLat && this.state.actualLat)? 
         <MapWithADrawingManager lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
         <br/>
@@ -212,54 +227,43 @@ return location
     </Row>
     <br/>
     <Row>
-			<Col md={3}>
-			  <Dropzone onDrop={this.onDrop}  style={{height:'90px', border:'1px dashed #ccc', padding:'20px'}}>
-				              Suelta la imagen aquí.
-				            </Dropzone>
-                        {this.state.files.length > 0 ? <div>
-                         <h2>Uploading {this.state.files.length} files...</h2>
-                         <div>{this.state.files.map((file) => <Image src={file.preview} responsive/> )}</div>
-
-                         {this.state.files.map((file) => <div>{file.preview} </div> )}
-                         </div> : null}
-
-			</Col>
-      <Col md={9}>
-      <Col md={3}>
-       <FormGroup> 
+		  <h1>Detalles de la ruta</h1>
+      <Col md={10}>
+           <Col md={4}>
+                <FormGroup> 
                 <ControlLabel>País
                 </ControlLabel> 
                 <CountryDropdown
                 value = {
-                  this.state.shippingCountry
+                  this.state.country
                 }
-                valueType = "short"
+                valueType = "full"
                 classes = "form-control"
                 onChange = {
                   (val) => this.selectCountry(val)
                 } /> 
                 </FormGroup> 
                 </Col>
-                 <Col md={3}>
+            <Col md={4}>
                 <FormGroup> 
                 <ControlLabel>Estado
                 </ControlLabel> 
                 
                 <RegionDropdown
-                countryValueType = "short"
+                countryValueType = "full"
                 country = {
-                  this.state.shippingCountry
+                  this.state.country
                 }
                 value = {
-                  this.state.shippingState
+                  this.state.state
                 }
                 classes = "form-control"
                 onChange = {
                   (val) => this.selectRegion(val)
                 }/> 
                 </FormGroup> 
-               </Col>
- <Col md={3}>
+             </Col>
+             <Col md={4}>
                   <FormGroup>
                      <ControlLabel>Ciudad </ControlLabel> <FormControl
                   type='text'
@@ -273,25 +277,39 @@ return location
                  
                   </Col>
 
-			<Col md={3}>
-			<ControlLabel>Nombre de la ruta</ControlLabel>
-				<input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" />
-				</Col>
-				<Col md={2}>
-				<ControlLabel>Distancia (KM)</ControlLabel>
-				<input name="distance" value={this.state.distance} onChange={this.handleInputChange}  className="form-control" type="text" />
-				</Col>
-				<Col md={2}>
-				<ControlLabel>Nivel</ControlLabel>
-				<input name="level" value={this.state.level} onChange={this.handleInputChange}  className="form-control" type="text" />
-				</Col>
-				<Col md={4}>
-				<ControlLabel>Descripción de la ruta</ControlLabel>
-				<input name="description" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" />
-				</Col>
-				<ControlLabel> _</ControlLabel>
-				<Col md={3}> <Button bsStyle="primary" block onClick={this.addItem}>Añadir</Button></Col>
+    			<Col md={4}>
+        			<ControlLabel>Nombre de la ruta</ControlLabel>
+        				<input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" />
+        		</Col>
+        		<Col md={4}>
+        				<ControlLabel>Distancia (KM)</ControlLabel>
+        				<input name="distance" value={this.state.distance} onChange={this.handleInputChange}  className="form-control" type="text" />
+        		</Col>
+        		<Col md={4}>
+        				<ControlLabel>Nivel</ControlLabel>
+        				<input name="level" value={this.state.level} onChange={this.handleInputChange}  className="form-control" type="text" />
+        				</Col>
+      			<Col md={12}>
+        				<ControlLabel>Descripción de la ruta</ControlLabel>
+        				<input name="description" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" />
+    				</Col>
         </Col>
+        <Col md={2}>
+        <ControlLabel>Imagen promocional</ControlLabel>
+                <Dropzone onDrop={this.onDrop}  style={{height:'90px', border:'1px dashed #ccc', padding:'20px'}}>
+                      Suelta la imagen aquí.
+                    </Dropzone>
+                        {this.state.files.length > 0 ? <div>
+                         <h2>Uploading {this.state.files.length} files...</h2>
+                         <div>{this.state.files.map((file) => <Image src={file.preview} responsive/> )}</div>
+
+                         {this.state.files.map((file) => <div>{file.preview} </div> )}
+                         </div> : null}
+
+                           <br/>
+       <Button bsStyle="primary" block onClick={this.addItem}>Añadir</Button>
+
+      </Col>
       </Row>
 			</Row>
 			</div>

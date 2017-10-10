@@ -4,13 +4,40 @@ import Home from './Home';
 import About from './About';
 import Topics from './Topics';
 import Routes from './Routes';
+import Signup from './Signup';
 import RouteView from './Route';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
+import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {LinkContainer} from 'react-router-bootstrap'
 import {Navbar, Nav, MenuItem, NavItem, Grid, Image} from 'react-bootstrap'
 
 class Menu extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      userId:'',
+      userSavedData:''
+    }
+  }
+  componentWillMount(){
+      var that = this
+     var user = firebaseAuth.onAuthStateChanged(function(user) {
+       if (user) {
+         console.log(user.uid)
+         var userSavedData = firebaseDb.ref('users/'+user.uid)
+       
+        userSavedData.on('value', function(value){
+        console.log('userSavedData: ', value.val())
+          
+            that.setState({
+                userSavedData: value.val(),
+                userId: user.uid,
+            })
+        })
+       } 
+     });
+  }
   render () {
     return (
       <div>
@@ -39,8 +66,8 @@ class Menu extends Component {
 
       </Nav>
       <Nav pullRight>
-      <LinkContainer to="/">
-        <NavItem eventKey={1} >Login</NavItem>
+      <LinkContainer to="/signup">
+        <NavItem eventKey={1} >{this.state.userSavedData.displayName || "Login"}</NavItem>
     </LinkContainer>
 
     <LinkContainer to="/">
@@ -55,6 +82,7 @@ class Menu extends Component {
         <Route exact path="/" component={Home}/>
 <Grid>
 
+        <Route path="/signup" component={Signup}/>
         <Route path="/about" component={About}/>
         <Route path="/routes" component={Routes}/>
         <Route path="/route/:key" component={RouteView}/>
@@ -71,7 +99,6 @@ const MiPrimerComponente = () => {
     <BrowserRouter>
       <div>
         <Menu/>
-       
       </div>
     </BrowserRouter>
   );
