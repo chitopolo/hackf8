@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Home from './Home';
 import About from './About';
 import Topics from './Topics';
+import RouteCreator from './RouteCreator';
 import Routes from './Routes';
 import Signup from './Signup';
 import RouteView from './Route';
@@ -55,11 +56,14 @@ class Menu extends Component {
     <LinkContainer to="/">
         <NavItem eventKey={1} >Home</NavItem>
     </LinkContainer>
-     <LinkContainer to="/routes">
-        <NavItem eventKey={2} >Rutas</NavItem>
+     <LinkContainer to="/route/create">
+        <NavItem eventKey={2} >Creador de Rutas</NavItem>
+    </LinkContainer>
+    <LinkContainer to="/routes">
+        <NavItem eventKey={3} >Rutas</NavItem>
     </LinkContainer>
      <LinkContainer to="/topics">
-        <NavItem eventKey={3} >Topics</NavItem>
+        <NavItem eventKey={4} >Topics</NavItem>
     </LinkContainer>
 
 
@@ -67,7 +71,7 @@ class Menu extends Component {
       </Nav>
       <Nav pullRight>
       <LinkContainer to="/signup">
-        <NavItem eventKey={1} >{this.state.userSavedData.displayName || "Login"}</NavItem>
+        <NavItem eventKey={1} > <span><Image circle  style={{height:'25px'}} src={this.state.userSavedData.avatar}/></span>  {this.state.userSavedData.displayName || "Login"}</NavItem>
     </LinkContainer>
 
     <LinkContainer to="/">
@@ -84,6 +88,7 @@ class Menu extends Component {
 
         <Route path="/signup" component={Signup}/>
         <Route path="/about" component={About}/>
+        <Route path="/route/create" component={RouteCreator}/>
         <Route path="/routes" component={Routes}/>
         <Route path="/route/:key" component={RouteView}/>
         <Route path="/topics" component={Topics}/>

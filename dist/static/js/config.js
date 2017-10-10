@@ -3,6 +3,6 @@ export const FIREBASE_CONFIG = {
     authDomain: "biciruta-bo.firebaseapp.com",
     databaseURL: "https://biciruta-bo.firebaseio.com",
     projectId: "biciruta-bo",
-    storageBucket: "",
+    storageBucket: "biciruta-bo.appspot.com",
     messagingSenderId: "1034085240639"
   };

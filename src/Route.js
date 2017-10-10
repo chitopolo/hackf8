@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Table, Button, Row, Col, Grid, ControlLabel} from  'react-bootstrap'
+import {Table, Button, Row, Col, Grid, ControlLabel, Image} from  'react-bootstrap'
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
 import _ from 'underscore'
 import Dropzone from 'react-dropzone'
@@ -13,6 +13,9 @@ import {
 } from "react-google-maps";
 import { Link, withRouter } from 'react-router-dom'
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+import FacebookProvider, { Comments } from 'react-facebook';
+
+
 
 var drawPolyline = []
 
@@ -52,9 +55,6 @@ const MapWithADrawingManager = compose(
 
 
 
-
-
-
 class RouteCreator extends Component {
 	constructor(props, context){
 		super(props, context)
@@ -62,8 +62,8 @@ class RouteCreator extends Component {
 			title:'',
 			distance:'',
 			description:'',
-            level:'',
-            Route:{},
+      level:'',
+      Route:{},
       files:[],
       polyline:[],
       actualLat:0,
@@ -161,18 +161,40 @@ class RouteCreator extends Component {
 
 	render() {
 
-
+    var titleStyle= {
+      height: '300px',
+      width: '400px',
+      fontSize: '24px',
+      textAlign: 'center',
+      padding: '0 20px',
+      margin: '20px',
+      display: 'flex',
+      justifyContent: 'center', 
+      alignItems: 'center', 
+    }
 
 		return (
 			<div>
+      {this.state.Route && 
 			<Row>
-            <h1>{this.state.Route.title}</h1>
-
+            <Row>
+            <Col md={6}>
+            <div style={titleStyle}>{this.state.Route.title}</div>
+            </Col>
+            <Col md={6}>
+              <Image src={this.state.Route.image} responsive thumbnail/>
+            </Col>
+            </Row>
+            <br/>
             {(this.state.actualLat && this.state.actualLat)? 
             	<MapWithADrawingManager RoutePolyline={this.state.Route.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
 	
         <Row>
+      <br/>
+
+        
         <Col md={9}>
+
         <h3>Descripción</h3>
             <p>{this.state.Route.description}</p>
             </Col>
@@ -183,8 +205,15 @@ class RouteCreator extends Component {
             </Row>
             </Col>
 		</Row>
+{console.log('this.props.match: ', this.props.match)}
+    <Row>
+       <FacebookProvider appId="1621089814578682">
+        <Comments  href={"http://www.biciruta.com/"+this.props.match.url}/>
+      </FacebookProvider>
+    </Row>
 
-			</Row>
+			</Row>}
+
 			</div>
 		);
 	}
