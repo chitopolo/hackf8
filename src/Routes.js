@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Table, Button, Row, Col, Grid, ControlLabel} from  'react-bootstrap'
+import {Table, Button, Row, Col, Grid, ControlLabel, FormGroup, FormControl} from  'react-bootstrap'
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
 import _ from 'underscore'
 import Dropzone from 'react-dropzone'
@@ -11,8 +11,12 @@ import {
   GoogleMap,
   Polyline
 } from "react-google-maps";
+import {CountryDropdown, RegionDropdown} from 'react-country-region-selector';
 import {Link} from 'react-router-dom'
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+import IntlTelInput from 'react-intl-tel-input';
+import './../node_modules/react-intl-tel-input/dist/libphonenumber.js';
+
 
 var drawPolyline = []
 
@@ -165,6 +169,15 @@ return location
    onMarkerClick = (props, marker, e) => {
   }
 
+  selectCountry = (val) => {
+    console.log('val country:', val)
+    this.setState({shippingCountry: val});
+  }
+
+  selectRegion = (val)=> {
+    this.setState({shippingState: val});
+  }
+
 
    onDrop=(acceptedFiles, rejectedFiles)=> {
        console.log('Accepted files: ', acceptedFiles);
@@ -188,8 +201,17 @@ return location
     
       {(this.state.actualLat && this.state.actualLat)? 
         <MapWithADrawingManager lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
-
+        <br/>
+        <Row>
+        <Col md={6}>
+    <Button onClick={this.confirmPolyline} block bsStyle="warning">Limpiar Mapa</Button>
+    </Col>
+    <Col md={6}>
     <Button onClick={this.confirmPolyline} block bsStyle="success">Confirmar</Button>
+    </Col>
+    </Row>
+    <br/>
+    <Row>
 			<Col md={3}>
 			  <Dropzone onDrop={this.onDrop}  style={{height:'90px', border:'1px dashed #ccc', padding:'20px'}}>
 				              Suelta la imagen aquí.
@@ -202,7 +224,56 @@ return location
                          </div> : null}
 
 			</Col>
-			<Col md={5}>
+      <Col md={9}>
+      <Col md={3}>
+       <FormGroup> 
+                <ControlLabel>País
+                </ControlLabel> 
+                <CountryDropdown
+                value = {
+                  this.state.shippingCountry
+                }
+                valueType = "short"
+                classes = "form-control"
+                onChange = {
+                  (val) => this.selectCountry(val)
+                } /> 
+                </FormGroup> 
+                </Col>
+                 <Col md={3}>
+                <FormGroup> 
+                <ControlLabel>Estado
+                </ControlLabel> 
+                
+                <RegionDropdown
+                countryValueType = "short"
+                country = {
+                  this.state.shippingCountry
+                }
+                value = {
+                  this.state.shippingState
+                }
+                classes = "form-control"
+                onChange = {
+                  (val) => this.selectRegion(val)
+                }/> 
+                </FormGroup> 
+               </Col>
+ <Col md={3}>
+                  <FormGroup>
+                     <ControlLabel>Ciudad </ControlLabel> <FormControl
+                  type='text'
+                  value={this.state.shippingCity}
+                  placeholder='Ciudad'
+                  maxLength="50"
+                  ref='shippingCity'
+                  name='shippingCity'
+                  onChange={this.handleChange}/> 
+                  </FormGroup>
+                 
+                  </Col>
+
+			<Col md={3}>
 			<ControlLabel>Nombre de la ruta</ControlLabel>
 				<input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" />
 				</Col>
@@ -214,13 +285,14 @@ return location
 				<ControlLabel>Nivel</ControlLabel>
 				<input name="level" value={this.state.level} onChange={this.handleInputChange}  className="form-control" type="text" />
 				</Col>
-				<Col md={6}>
+				<Col md={4}>
 				<ControlLabel>Descripción de la ruta</ControlLabel>
 				<input name="description" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" />
 				</Col>
 				<ControlLabel> _</ControlLabel>
 				<Col md={3}> <Button bsStyle="primary" block onClick={this.addItem}>Añadir</Button></Col>
-
+        </Col>
+      </Row>
 			</Row>
 			</div>
 		);
