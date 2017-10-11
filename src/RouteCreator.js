@@ -487,7 +487,7 @@ export class RoutesList extends Component {
 					<tbody>
 						{_.map(this.state.routes, function(value, key){
 							return <tr key={key}>
-						<td><Image src={value.image} responsive/></td>
+						<td>{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}</td>
 						<td>{value.title}</td>
 						<td>{value.distance}</td>
 						<td>{value.description}</td>

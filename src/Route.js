@@ -14,6 +14,7 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
 import FacebookProvider, { Comments } from 'react-facebook';
+import Slider from 'react-slick'
 
 
 
@@ -164,7 +165,7 @@ class RouteCreator extends Component {
     var titleStyle= {
       height: '300px',
       width: '400px',
-      fontSize: '24px',
+      fontSize: '30px',
       textAlign: 'center',
       padding: '0 20px',
       margin: '20px',
@@ -173,6 +174,17 @@ class RouteCreator extends Component {
       alignItems: 'center', 
     }
 
+    var descriptionStyle = {
+      textAlign: 'justify',
+      textJustify: 'inter-word'
+    }
+   var settings = {
+      dots: true,
+      infinite: true,
+      speed: 500, 
+      slidesToShow: 4,
+      slidesToScroll: 1,
+    };       
 		return (
 			<div>
       {this.state.Route && 
@@ -182,13 +194,14 @@ class RouteCreator extends Component {
             <div style={titleStyle}>{this.state.Route.title}</div>
             </Col>
             <Col md={6}>
-              <Image src={this.state.Route.image} responsive thumbnail/>
+            { this.state.Route.image ? <Image src={this.state.Route.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
+              
             </Col>
             </Row>
             <br/>
             {(this.state.actualLat && this.state.actualLat)? 
             	<MapWithADrawingManager RoutePolyline={this.state.Route.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
-	
+	           
         <Row>
       <br/>
 
@@ -196,7 +209,7 @@ class RouteCreator extends Component {
         <Col md={9}>
 
         <h3>Descripción</h3>
-            <p>{this.state.Route.description}</p>
+            <p style={descriptionStyle}>{this.state.Route.description}</p>
             </Col>
             <Col md={3}>
             <Row>
@@ -205,11 +218,31 @@ class RouteCreator extends Component {
             </Row>
             </Col>
 		</Row>
-{console.log('this.props.match: ', this.props.match)}
+    <br/>
+
+    <h2>Fotografías de la ruta</h2>
+
+             <div style={{maxHeight:'200px'}}>
+              <Slider {...settings}>
+              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
+              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
+              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
+              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
+              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
+            </Slider>
+            </div>
+
+
+
+<br/>
     <Row>
+    <Col md={6}>
+    </Col>
+    <Col md={6}>
        <FacebookProvider appId="1621089814578682">
         <Comments  href={"http://www.biciruta.com/"+this.props.match.url}/>
       </FacebookProvider>
+      </Col>
     </Row>
 
 			</Row>}

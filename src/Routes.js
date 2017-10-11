@@ -41,26 +41,31 @@ export default class RoutesList extends Component {
 			<div>
 						{_.map(this.state.routes, function(value, key){
 							return <div key={key}>
+					<Row>
+						<Col md={3}>
+						{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
+						</Col>
+
+						<Col md={9}>
 							<Row>
-						<Col md={3}>
-						<Image src={value.image} responsive/>
-						</Col>
-						<Col md={9}>
-						<Row>
-						<Col md={12}>
-							<h2>{value.title}</h2>
-						</Col>
-						<Col md={9}>
-						 <Button bsSize="small"><Glyphicon glyph="tree-conifer" /> {value.distance}</Button>
-						 <Button bsSize="small"><Glyphicon glyph="sunglasses" /> {value.difficulty}</Button>
-						<p>{value.description}</p>
-						</Col>
-						<Col md={3}>
-							<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
-							<Button block  bsSize="xsmall" bsStyle="warning">editar</Button>
-							<Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button>
-						</Col>
-						</Row>
+								<Col md={8}>
+									<h2>{value.title}</h2>
+								</Col>
+								<Col md={4} style={{fontSize:'1.2em'}}>
+								<br/>
+									 {value.distance && <span><b>Distancia:</b> {value.distance}</span>}  {value.difficulty && <span><b>Dificultad:</b> {value.difficulty}</span>}
+								</Col>
+							</Row>
+							<Row>
+							<Col md={9}>
+									<p>{value.description}</p>
+							</Col>
+							<Col md={3}>
+								<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
+								<Button block  bsSize="xsmall" bsStyle="warning">editar</Button>
+								<Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button>
+							</Col>
+							</Row>
 						</Col>
 						
 						</Row>
