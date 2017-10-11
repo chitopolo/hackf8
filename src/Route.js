@@ -63,24 +63,54 @@ class RouteCreator extends Component {
 			title:'',
 			distance:'',
 			description:'',
-      level:'',
+      difficulty:'',
       Route:{},
       files:[],
       polyline:[],
       actualLat:0,
-      actualLon:0
+      actualLon:0,
+      userSavedData:{},
+      editMode:true
 		}
     }
     componentWillMount(){
+        
+         var that = this
+     var user = firebaseAuth.onAuthStateChanged(function(user) {
+       if (user) {
+         console.log(user.uid)
+         var userSavedData = firebaseDb.ref('users/'+user.uid)
+       
+        userSavedData.on('value', function(value){
+        console.log('userSavedData: ', value.val())
+          
+            that.setState({
+                userSavedData: value.val(),
+                userId: user.uid,
+            })
+        })
+       } 
+     });
+
+
         var RouteId = this.props.match.params.key
         var RouteData = firebaseDb.ref('routes').child(RouteId)
         RouteData.on('value', function(snapshot){
             console.log('Route ID: ', RouteId, ' value: ', snapshot.val())
             this.setState({
-                Route:snapshot.val()
+                title:snapshot.val().title,
+                description:snapshot.val().description,
+                distance:snapshot.val().distance,
+                difficulty:snapshot.val().difficulty ||'',
+                image:snapshot.val().image|| '',
             })
         }, this)
     }
+
+
+
+  
+
 
     componentDidMount(){
         var that = this
@@ -156,6 +186,47 @@ class RouteCreator extends Component {
         })
      }  
 
+     editData = () =>{  
+      this.setState({
+        editMode:!this.state.editMode
+      })
+
+     }
+
+     saveData = () =>{  
+        var RouteId = this.props.match.params.key
+        var RouteData = firebaseDb.ref('routes').child(RouteId)
+        console.log('to update:', {
+          title:this.state.title,
+          description:this.state.description,
+          distance:this.state.distance,
+          difficulty:this.state.difficulty,
+          image:this.state.image,
+
+        })
+
+
+
+        RouteData.update({
+          title:this.state.title,
+          description:this.state.description,
+          distance:this.state.distance,
+          difficulty:this.state.difficulty,
+          image:this.state.image,
+
+        })
+
+     }
+
+
+  handleInputChange=(event)=>{
+    const target = event.target;
+    const value =  target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+  }
  
   
 
@@ -187,20 +258,35 @@ class RouteCreator extends Component {
     };       
 		return (
 			<div>
-      {this.state.Route && 
+      {this.state && 
 			<Row>
+
+      {(this.state.userSavedData.permissions <= 10) ? 
+        <Row>
+        <h3>Admin menu</h3>
+        <Col md={4}><Button bsStyle="warning" block onClick={this.editData}>Editar</Button></Col>
+        <Col md={4}><Button bsStyle="danger" block>Desactivar</Button></Col>
+        <Col md={4}>{(this.state.editMode)? <Button bsStyle="info" block onClick={this.saveData}>Guardar Cambios</Button>: null }</Col>
+        </Row>
+        :null}
+        <br/>
+
             <Row>
             <Col md={6}>
-            <div style={titleStyle}>{this.state.Route.title}</div>
+
+            
+
+
+            <div style={titleStyle}>  {(this.state.editMode) ? <div> <ControlLabel>Titulo</ControlLabel> <input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" /> </div>: <div>{this.state.title}</div>}  </div>
             </Col>
             <Col md={6}>
-            { this.state.Route.image ? <Image src={this.state.Route.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
+            { this.state.image ? <Image src={this.state.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
               
             </Col>
             </Row>
             <br/>
             {(this.state.actualLat && this.state.actualLat)? 
-            	<MapWithADrawingManager RoutePolyline={this.state.Route.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
+            	<MapWithADrawingManager RoutePolyline={this.state.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
 	           
         <Row>
       <br/>
@@ -208,19 +294,22 @@ class RouteCreator extends Component {
         
         <Col md={9}>
 
-        <h3>Descripción</h3>
-            <p style={descriptionStyle}>{this.state.Route.description}</p>
+        <h3>Descripción  </h3>
+
+           
+
+            <p style={descriptionStyle}>{(this.state.editMode) ? <textarea name="title" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.description}</div>} </p>
             </Col>
             <Col md={3}>
             <Row>
-            <h3>Nivel:</h3> {this.state.Route.level}
-            <h3>Distancia (Km):</h3> {this.state.Route.distance}
+            <h3>Nivel:</h3> {(this.state.editMode) ? <input name="difficulty" value={this.state.difficulty} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.difficulty}</div>} 
+            <h3>Distancia (Km):</h3> {(this.state.editMode) ? <input name="distance" value={this.state.distance} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.distance}</div>}  
             </Row>
             </Col>
 		</Row>
     <br/>
 
-    <h2>Fotografías de la ruta</h2>
+    <h2>Fotografías de la ruta   {(this.state.editMode) ? <Button >Editar Imagenes</Button>:null}</h2>
 
              <div style={{maxHeight:'200px'}}>
               <Slider {...settings}>
