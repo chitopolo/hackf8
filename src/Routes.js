@@ -38,7 +38,7 @@ export default class RoutesList extends Component {
 	}
 	render() {
 		return (
-			<div>
+			<Grid>
 						{_.map(this.state.routes, function(value, key){
 							return <div key={key}>
 					<Row>
@@ -73,7 +73,7 @@ export default class RoutesList extends Component {
 						})}
 						
 				
-			</div>
+			</Grid>
 		);
 	}
 }

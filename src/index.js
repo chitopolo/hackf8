@@ -84,7 +84,6 @@ class Menu extends Component {
 
 
         <Route exact path="/" component={Home}/>
-<Grid>
 
         <Route path="/signup" component={Signup}/>
         <Route path="/about" component={About}/>
@@ -92,7 +91,6 @@ class Menu extends Component {
         <Route path="/routes" component={Routes}/>
         <Route path="/route/:key" component={RouteView}/>
         <Route path="/topics" component={Topics}/>
-        </Grid>
       </div>
     )
   }

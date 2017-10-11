@@ -350,7 +350,7 @@ return location
 
 
 		return (
-			<div>
+			<Grid>
 			<Row>
     <h1>Creador de Rutas</h1>
       {(this.state.actualLat && this.state.actualLat)? 
@@ -451,7 +451,7 @@ return location
       </Col>
       </Row>
 			</Row>
-			</div>
+			</Grid>
 		);
 	}
 }
@@ -474,7 +474,7 @@ export class RoutesList extends Component {
 	}
 	render() {
 		return (
-			<div>
+			<Grid>
 				<Table responsive striped>
 					<thead>
 					<th>Imagen promocional de ruta</th>
@@ -503,7 +503,7 @@ export class RoutesList extends Component {
 					</tbody>
 
 				</Table>
-			</div>
+			</Grid>
 		);
 	}
 }

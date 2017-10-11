@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Table, Button, Row, Col, Grid, ControlLabel, Image} from  'react-bootstrap'
+import {Table, Button, Row, Col, Grid, ControlLabel, Image, ProgressBar, Thumbnail} from  'react-bootstrap'
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
 import _ from 'underscore'
 import Dropzone from 'react-dropzone'
@@ -69,8 +69,10 @@ class RouteCreator extends Component {
       polyline:[],
       actualLat:0,
       actualLon:0,
+      images:'',
       userSavedData:{},
-      editMode:true
+      editMode:false,
+      aditionalImages:''
 		}
     }
     componentWillMount(){
@@ -103,13 +105,13 @@ class RouteCreator extends Component {
                 distance:snapshot.val().distance,
                 difficulty:snapshot.val().difficulty ||'',
                 image:snapshot.val().image|| '',
+                images:snapshot.val().images|| '',
             })
         }, this)
     }
 
 
 
-  
 
 
     componentDidMount(){
@@ -129,7 +131,7 @@ class RouteCreator extends Component {
         });
     });
   
- return location
+    return location
  
     };
 
@@ -142,7 +144,7 @@ class RouteCreator extends Component {
         })
     }
 
-  handleInputChange=(event)=>{
+  handleInputChange = (event)=>{
     const target = event.target;
     const value =  target.value;
     const name = target.name;
@@ -150,6 +152,15 @@ class RouteCreator extends Component {
       [name]: value
     });
   }
+
+    onDrop2 = (acceptedFiles, rejectedFiles) =>{
+        console.log('Accepted files: ', acceptedFiles);
+        console.log('Rejected files: ', rejectedFiles);
+        this.setState({
+           aditionalImages: acceptedFiles
+         })
+      }  
+  
   confirmPolyline = () => {
 
       var markers = []
@@ -227,12 +238,62 @@ class RouteCreator extends Component {
       [name]: value
     });
   }
+
+
+   addImage = ()=> {
+var that = this
+
  
-  
 
+    if(this.state.aditionalImages.length>0){
 
+    var routes = firebaseDb.ref('routes/'+this.props.match.params.key+'/images')
+    firebaseStorage.ref('routes/'+this.props.match.params.key+'/images/'+ this.state.aditionalImages[0].name).getDownloadURL().then(onResolve, onReject);
+
+     function onResolve(foundURL) {
+       routes.push(foundURL)
+    }
+
+     function onReject(error) {
+    var uploadTask = firebaseStorage.ref('routes/'+that.props.match.params.key+'/images/'+ that.state.aditionalImages[0].name).put(that.state.aditionalImages[0])
+
+    uploadTask.on('state_changed', function(snapshot){
+      // Observe state change events such as progress, pause, and resume
+      console.log("snapshot: ", snapshot)
+
+      var progress2 = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+
+      that.setState({
+        progress2: progress2
+      })
+      console.log('Upload is ' + progress2 + '% done');
+      switch (snapshot.state) {
+        case 'paused': // or 'paused'
+          console.log('Upload is paused');
+          break;
+        case 'running': // or 'running'
+          console.log('Upload is running');
+          break;
+      }
+      // See below for more detail
+    }, function(error) {
+      // Handle unsuccessful uploads
+      console.log("error: ", error)
+
+    }, function() {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      var downloadURL = uploadTask.snapshot.downloadURL;
+      console.log("download URL", downloadURL)
+
+     routes.push(downloadURL)
+
+    });
+    }
+    }
+  }
 	render() {
-
+    var imageBackgroundToShow = this.state.image || './../static/img/bicirutabw.png'
     var titleStyle= {
       height: '300px',
       width: '400px',
@@ -243,6 +304,19 @@ class RouteCreator extends Component {
       display: 'flex',
       justifyContent: 'center', 
       alignItems: 'center', 
+      color:'white'
+    }
+    var backgroundStyle = {
+      position: 'fixed',
+      left: 0,
+      right: 0,
+      zIndex: 1,  
+      backgroundImage: 'url('+imageBackgroundToShow+')',
+      position:'relative',
+      WebkitFilter: 'blur(5px)',
+      filter: 'blur(5px)',
+      minHeight:'500px',
+      display: 'block'
     }
 
     var descriptionStyle = {
@@ -256,23 +330,36 @@ class RouteCreator extends Component {
       slidesToShow: 4,
       slidesToScroll: 1,
     };       
+    var contentStyle = {
+      position: 'relative',
+      left: 0,
+      right: 0,
+      zIndex: 9999,
+      marginLeft: '20px',
+      marginRight: '20px',
+      top:'-400px'
+    }
 		return (
 			<div>
       {this.state && 
 			<Row>
 
-      {(this.state.userSavedData.permissions <= 10) ? 
+      <Grid>{(this.state.userSavedData.permissions <= 10) ? 
         <Row>
         <h3>Admin menu</h3>
         <Col md={4}><Button bsStyle="warning" block onClick={this.editData}>Editar</Button></Col>
         <Col md={4}><Button bsStyle="danger" block>Desactivar</Button></Col>
         <Col md={4}>{(this.state.editMode)? <Button bsStyle="info" block onClick={this.saveData}>Guardar Cambios</Button>: null }</Col>
         </Row>
-        :null}
+        :null} </Grid>
         <br/>
 
-            <Row>
-            <Col md={6}>
+            <div style={backgroundStyle}>
+            
+            </div>
+
+<Grid>            <div style={contentStyle}>
+              <Col md={6} >
 
             
 
@@ -283,12 +370,17 @@ class RouteCreator extends Component {
             { this.state.image ? <Image src={this.state.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
               
             </Col>
-            </Row>
-            <br/>
+
+            </div>
+            </Grid>
+            
+            <h3>Ruta</h3>
+
+
             {(this.state.actualLat && this.state.actualLat)? 
             	<MapWithADrawingManager RoutePolyline={this.state.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
 	           
-        <Row>
+        <Grid> <Row>
       <br/>
 
         
@@ -307,20 +399,46 @@ class RouteCreator extends Component {
             </Row>
             </Col>
 		</Row>
+
     <br/>
 
-    <h2>Fotografías de la ruta   {(this.state.editMode) ? <Button >Editar Imagenes</Button>:null}</h2>
+    <h2>Fotografías de la ruta</h2>   {(this.state.editMode) ? <Row>
+      <Col md={4}>
+          
+          <Row>
+                {(Object.keys(this.state.aditionalImages).length) ? _.map(this.state.aditionalImages, function(value){
+                  console.log('value: ', value)
+                  return <Col md={2}><Thumbnail><Image src={value} responsive /></Thumbnail></Col> 
 
-             <div style={{maxHeight:'200px'}}>
+                  }):null}
+                  </Row>  
+           <Dropzone onDrop={this.onDrop2}>
+              Suelta la imagen aquí.
+            </Dropzone>
+
+            {this.state.aditionalImages.length > 0 ? <div>
+                         <h2>Uploading {this.state.aditionalImages.length} images...</h2>
+                         <div>{this.state.aditionalImages.map((file) => <Image src={file.preview} responsive/> )}</div>
+
+                         {this.state.aditionalImages.map((file, key) => <div key={key}>{file.preview} </div> )}
+                         </div> : null}
+                   
+
+                          <ProgressBar  striped bsStyle="success" now={this.state.progress2} label={`${this.state.progress2}%`} />
+                          <Button onClick={this.addImage}>Añadir Foto</Button>
+                          </Col>
+                          </Row>:null}
+
+             
+            {(Object.keys(this.state.images).length >= 0)?  <div>
               <Slider {...settings}>
-              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
-              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
-              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
-              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
-              <div><Image src="/static/bicirutabanner1920.jpg" style={{maxHeight:'200px'}}/></div>
-            </Slider>
-            </div>
+              {_.map(this.state.images, function(value, key){
+              return <div key={key}><Image src={value} style={{maxHeight:'200px'}}/></div>
 
+              })}
+            </Slider>
+            </div>: null}
+            
 
 
 <br/>
@@ -333,8 +451,11 @@ class RouteCreator extends Component {
       </FacebookProvider>
       </Col>
     </Row>
+</Grid>
 
 			</Row>}
+
+
 
 			</div>
 		);
