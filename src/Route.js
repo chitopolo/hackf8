@@ -214,6 +214,7 @@ class RouteCreator extends Component {
           distance:this.state.distance,
           difficulty:this.state.difficulty,
           image:this.state.image,
+          caution:this.state.caution,
 
         })
 
@@ -225,6 +226,7 @@ class RouteCreator extends Component {
           distance:this.state.distance,
           difficulty:this.state.difficulty,
           image:this.state.image,
+          caution:this.state.caution,
 
         })
 

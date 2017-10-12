@@ -12,14 +12,36 @@ function userExistsCallback(userId, exists) {
 }
 
 
+
+
+
 export default class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.sendCredential  = this.sendCredential.bind(this)
     this.state = {
       user:'',
-      password:''
+      password:'',
+      uid:null
     }
+  }
+   componentWillMount(){
+      var that = this
+     var user = firebaseAuth.onAuthStateChanged(function(user) {
+       if (user) {
+         console.log(user.uid)
+         var userSavedData = firebaseDb.ref('users/'+user.uid)
+       
+        userSavedData.on('value', function(value){
+        console.log('userSavedData: ', value.val())
+          
+            that.setState({
+                userSavedData: value.val(),
+                userId: user.uid,
+            })
+        })
+       } 
+     });
   }
   
   sendCredential(provider){
@@ -133,7 +155,16 @@ export default class Signup extends React.Component {
 
     return (
       <div>
-        <Grid>
+
+      {console.log('userId: ',this.state.userId)}
+
+        {(this.state.userId)? <Grid>
+          
+          <h2>{this.state.userSavedData.displayName}</h2>
+
+
+
+        </Grid>: <Grid>
           <Row>
             
           <Col md={6} mdOffset={3}>
@@ -156,7 +187,12 @@ export default class Signup extends React.Component {
           </Col>
          
           </Row>
-        </Grid>
+        </Grid>}
+
+
+
+
+        
       </div>
     );
   }
