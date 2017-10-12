@@ -295,26 +295,27 @@ var that = this
 	render() {
     var imageBackgroundToShow = this.state.image || './../static/img/bicirutabw.png'
     var titleStyle= {
-      height: '300px',
-      width: '400px',
+      height: '100px',
       fontSize: '30px',
       textAlign: 'center',
-      padding: '0 20px',
-      margin: '20px',
+      padding: '10px',
+      marginTop: '150px',
       display: 'flex',
       justifyContent: 'center', 
       alignItems: 'center', 
-      color:'white'
+      backgroundColor:'white',
+      boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+      textAlign: 'center',
+       opacity: 0.9
     }
     var backgroundStyle = {
+
       position: 'fixed',
       left: 0,
       right: 0,
       zIndex: 1,  
       backgroundImage: 'url('+imageBackgroundToShow+')',
       position:'relative',
-      WebkitFilter: 'blur(5px)',
-      filter: 'blur(5px)',
       minHeight:'500px',
       display: 'block'
     }
@@ -337,7 +338,11 @@ var that = this
       zIndex: 9999,
       marginLeft: '20px',
       marginRight: '20px',
-      top:'-400px'
+
+    }
+    var primaryImage = {
+      marginTop:'60px',
+
     }
 		return (
 			<div>
@@ -352,44 +357,37 @@ var that = this
         <Col md={4}>{(this.state.editMode)? <Button bsStyle="info" block onClick={this.saveData}>Guardar Cambios</Button>: null }</Col>
         </Row>
         :null} </Grid>
-        <br/>
 
             <div style={backgroundStyle}>
-            
-            </div>
-
-<Grid>            <div style={contentStyle}>
+              <Grid>
+                <div style={contentStyle}>
               <Col md={6} >
 
             
 
 
-            <div style={titleStyle}>  {(this.state.editMode) ? <div> <ControlLabel>Titulo</ControlLabel> <input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" /> </div>: <div>{this.state.title}</div>}  </div>
+            <div style={titleStyle}>  {(this.state.editMode) ? 
+              <div> <ControlLabel>Titulo</ControlLabel> 
+              <input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" /> </div>: <div>{this.state.title}</div>} 
+               </div>
             </Col>
             <Col md={6}>
-            { this.state.image ? <Image src={this.state.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
+            { this.state.image ? <Image src={this.state.image} style={primaryImage} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
               
             </Col>
 
             </div>
-            </Grid>
-            
-            <h3>Ruta</h3>
+              </Grid>
+            </div>
 
-
-            {(this.state.actualLat && this.state.actualLat)? 
-            	<MapWithADrawingManager RoutePolyline={this.state.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
-	           
-        <Grid> <Row>
+<Grid>          
+<Row style={{paddingTop:'100px', paddingBottom:'100px'}}>
       <br/>
 
         
         <Col md={9}>
 
         <h3>Descripción  </h3>
-
-           
-
             <p style={descriptionStyle}>{(this.state.editMode) ? <textarea name="title" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.description}</div>} </p>
             </Col>
             <Col md={3}>
@@ -398,9 +396,18 @@ var that = this
             <h3>Distancia (Km):</h3> {(this.state.editMode) ? <input name="distance" value={this.state.distance} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.distance}</div>}  
             </Row>
             </Col>
-		</Row>
+    </Row>  
+            </Grid>
+            
+            <h1 style={{textAlign:'center'}}>Detalle de la ruta</h1>
 
-    <br/>
+
+            {(this.state.actualLat && this.state.actualLat)? 
+            	<MapWithADrawingManager RoutePolyline={this.state.polyline} lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
+	           
+        <Grid style={{marginTop:'100px', marginBottom:'100px'}}> 
+
+    
 
     <h2>Fotografías de la ruta</h2>   {(this.state.editMode) ? <Row>
       <Col md={4}>
@@ -430,10 +437,10 @@ var that = this
                           </Row>:null}
 
              
-            {(Object.keys(this.state.images).length >= 0)?  <div>
+            {(Object.keys(this.state.images).length >= 0)?  <div style={{height:'300px'}}>
               <Slider {...settings}>
               {_.map(this.state.images, function(value, key){
-              return <div key={key}><Image src={value} style={{maxHeight:'200px'}}/></div>
+              return <div key={key}><Image src={value} responsive/></div>
 
               })}
             </Slider>
@@ -441,7 +448,9 @@ var that = this
             
 
 
-<br/>
+</Grid>
+<Grid>
+  
     <Row>
     <Col md={6}>
     </Col>

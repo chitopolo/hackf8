@@ -85,12 +85,12 @@ class Menu extends Component {
 
         <Route exact path="/" component={Home}/>
 
-        <Route path="/signup" component={Signup}/>
-        <Route path="/about" component={About}/>
-        <Route path="/route/create" component={RouteCreator}/>
-        <Route path="/routes" component={Routes}/>
-        <Route path="/route/:key" component={RouteView}/>
-        <Route path="/topics" component={Topics}/>
+        <Route exact path="/signup" component={Signup}/>
+        <Route exact path="/about" component={About}/>
+        <Route exact path="/route/create" component={RouteCreator}/>
+        <Route exact path="/routes" component={Routes}/>
+        <Route exact path="/route/:key" component={RouteView}/>
+        <Route exact path="/topics" component={Topics}/>
       </div>
     )
   }
