@@ -58,7 +58,7 @@ export default class RoutesList extends Component {
 							</Row>
 							<Row>
 							<Col md={9}>
-									<p>{value.description}</p>
+									<p>{value.description.substring(0,400)+'...'}</p>
 							</Col>
 							<Col md={3}>
 								<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>

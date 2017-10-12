@@ -7,7 +7,7 @@ import RouteCreator from './RouteCreator';
 import Routes from './Routes';
 import Signup from './Signup';
 import RouteView from './Route';
-import { BrowserRouter, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {LinkContainer} from 'react-router-bootstrap'
@@ -81,7 +81,7 @@ class Menu extends Component {
     </Navbar.Collapse>
   </Navbar>
 
-
+  <Switch>
 
         <Route exact path="/" component={Home}/>
 
@@ -91,6 +91,7 @@ class Menu extends Component {
         <Route exact path="/routes" component={Routes}/>
         <Route exact path="/route/:key" component={RouteView}/>
         <Route exact path="/topics" component={Topics}/>
+        </Switch>
       </div>
     )
   }

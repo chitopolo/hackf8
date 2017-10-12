@@ -106,6 +106,7 @@ class RouteCreator extends Component {
                 difficulty:snapshot.val().difficulty ||'',
                 image:snapshot.val().image|| '',
                 images:snapshot.val().images|| '',
+                caution:snapshot.val().caution|| '',
             })
         }, this)
     }
@@ -351,7 +352,6 @@ var that = this
 
       <Grid>{(this.state.userSavedData.permissions <= 10) ? 
         <Row>
-        <h3>Admin menu</h3>
         <Col md={4}><Button bsStyle="warning" block onClick={this.editData}>Editar</Button></Col>
         <Col md={4}><Button bsStyle="danger" block>Desactivar</Button></Col>
         <Col md={4}>{(this.state.editMode)? <Button bsStyle="info" block onClick={this.saveData}>Guardar Cambios</Button>: null }</Col>
@@ -362,8 +362,6 @@ var that = this
               <Grid>
                 <div style={contentStyle}>
               <Col md={6} >
-
-            
 
 
             <div style={titleStyle}>  {(this.state.editMode) ? 
@@ -383,10 +381,7 @@ var that = this
 <Grid>          
 <Row style={{paddingTop:'100px', paddingBottom:'100px'}}>
       <br/>
-
-        
         <Col md={9}>
-
         <h3>Descripción  </h3>
             <p style={descriptionStyle}>{(this.state.editMode) ? <textarea name="title" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.description}</div>} </p>
             </Col>
@@ -394,6 +389,7 @@ var that = this
             <Row>
             <h3>Nivel:</h3> {(this.state.editMode) ? <input name="difficulty" value={this.state.difficulty} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.difficulty}</div>} 
             <h3>Distancia (Km):</h3> {(this.state.editMode) ? <input name="distance" value={this.state.distance} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.distance}</div>}  
+            <br/>
             </Row>
             </Col>
     </Row>  
@@ -407,7 +403,13 @@ var that = this
 	           
         <Grid style={{marginTop:'100px', marginBottom:'100px'}}> 
 
-    
+    <Row style={{paddingTop:'100px', paddingBottom:'100px'}}>
+      <br/>
+        <Col md={12}>
+        <h3>Precauciones de la Ruta  </h3>
+            <p style={descriptionStyle}>{(this.state.editMode) ? <textarea name="caution" value={this.state.caution} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.caution}</div>} </p>
+            </Col>
+    </Row> 
 
     <h2>Fotografías de la ruta</h2>   {(this.state.editMode) ? <Row>
       <Col md={4}>
@@ -436,6 +438,7 @@ var that = this
                           </Col>
                           </Row>:null}
 
+
              
             {(Object.keys(this.state.images).length >= 0)?  <div style={{height:'300px'}}>
               <Slider {...settings}>
@@ -445,6 +448,9 @@ var that = this
               })}
             </Slider>
             </div>: null}
+
+
+
             
 
 

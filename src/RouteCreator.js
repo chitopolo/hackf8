@@ -213,7 +213,7 @@ return location
             distance:this.state.distance,
             description:this.state.description,
             difficulty:this.state.difficulty,
-            
+            caution:that.state.caution,
             city:this.state.city,
             country:this.state.country,
             state:this.state.state,
@@ -249,7 +249,7 @@ return location
             distance:that.state.distance,
             description:that.state.description,
             difficulty:that.state.difficulty,
-            
+            caution:that.state.caution,
             city:that.state.city,
             country:that.state.country,
             state:that.state.state,
@@ -294,7 +294,7 @@ return location
             distance:that.state.distance,
             description:that.state.description,
             difficulty:that.state.difficulty,
-            
+            caution:that.state.caution,
             city:that.state.city,
             country:that.state.country,
             state:that.state.state,
@@ -428,10 +428,14 @@ return location
         				<ControlLabel>Dificultad</ControlLabel>
         				<input name="difficulty" value={this.state.difficulty} onChange={this.handleInputChange}  className="form-control" type="text" />
         				</Col>
-      			<Col md={12}>
+      			<Col md={6}>
         				<ControlLabel>Descripción de la ruta</ControlLabel>
-        				<input name="description" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" />
+        				<textarea name="description" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" />
     				</Col>
+            <Col md={6}>
+                <ControlLabel>Precauciones de la ruta</ControlLabel>
+                <textarea name="caution" value={this.state.caution} onChange={this.handleInputChange}  className="form-control" type="text" />
+            </Col>
         </Col>
         <Col md={2}>
         <ControlLabel>Imagen promocional</ControlLabel>
@@ -480,7 +484,8 @@ export class RoutesList extends Component {
 					<th>Imagen promocional de ruta</th>
 					<th>Nombre de ruta</th>
 					<th>Distancia (KM)</th>
-					<th>Descripción de la ruta</th>
+          <th>Descripción de la ruta</th>
+					<th>Precaución de la ruta</th>
 					<th>Dificultad</th>
 					<th>Acciones</th>
 					</thead>
@@ -490,7 +495,8 @@ export class RoutesList extends Component {
 						<td>{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}</td>
 						<td>{value.title}</td>
 						<td>{value.distance}</td>
-						<td>{value.description}</td>
+            <td>{value.description}</td>
+						<td>{value.caution}</td>
 						<td>{value.difficulty}</td>
 						<td>
 						<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
