@@ -185,6 +185,11 @@ return location
     console.log('state after confirm polyline: ', drawPolyline.toString(), ' item 0: ', drawPolyline[0], ' item 0 to string  ', drawPolyline[0].toString(), ' markers: ', markers)
   }
 
+  resetPolyline = () =>{
+    drawPolyline = []
+    console.log('drawPolyline: ', drawPolyline)
+  }
+
   addItem =()=>{
 
 
@@ -200,29 +205,34 @@ return location
 
 
     var routes = firebaseDb.ref('routes')
-
+    var locations = firebaseDb.ref('locations')
+    var userData = firebaseDb.ref('users/'+that.state.userId)
       if(this.state.files[0]==undefined){
             routes.once('value')
         .then(function (dataSnapshot) {
           // handle read data.
           var ticketId = dataSnapshot.numChildren()+1 || 1
         console.log('ningun archivo')
-          routes.push({
+         var newRouteKey = routes.push({
             active:false,
-            title:this.state.title,
-            distance:this.state.distance,
-            description:this.state.description,
-            difficulty:this.state.difficulty,
+            title:that.state.title,
+            distance:that.state.distance,
+            description:that.state.description,
+            difficulty:that.state.difficulty,
             caution:that.state.caution,
-            city:this.state.city,
-            country:this.state.country,
-            state:this.state.state,
-            polyline:this.state.polyline,
-            actualLat:this.state.actualLat,
-            actualLon:this.state.actualLon,
-            createdBy:this.state.userId,
+            city:that.state.city,
+            country:that.state.country,
+            state:that.state.state,
+            polyline:that.state.polyline,
+            actualLat:that.state.actualLat,
+            actualLon:that.state.actualLon,
+            createdBy:that.state.userId,
             image:false
           })
+
+          locations.child(that.state.country).child(that.state.state).child(newRouteKey.key).set(true)
+          userData.child('routes').child(newRouteKey.key).set(true)
+
         })
     }else{
         
@@ -243,7 +253,7 @@ return location
 
     function onResolve(foundURL) {
         console.log('GOT TO RESOLVE')
-          routes.push({
+         var newRouteKey = routes.push({
             active:false,
             title:that.state.title,
             distance:that.state.distance,
@@ -259,6 +269,9 @@ return location
             image: foundURL,
             createdBy:that.state.userId
           })
+          locations.child(that.state.country).child(that.state.state).child(newRouteKey.key).set(true)
+          userData.child('routes').child(newRouteKey.key).set(true)
+          
     }
 
     function onReject(error) {
@@ -289,7 +302,7 @@ return location
           // handle read data.
           var ticketId = dataSnapshot.numChildren()+1|| 1
              
-        routes.push({
+        var newRouteKey = routes.push({
             title:that.state.title,
             distance:that.state.distance,
             description:that.state.description,
@@ -304,19 +317,12 @@ return location
             image: downloadURL,
             createdBy:that.state.userId
           })
-
-
+          locations.child(that.state.country).child(that.state.state).child(newRouteKey.key).set(true)
+          userData.child('routes').child(newRouteKey.key).set(true)
+          
     })  
-        
         });
     }
-
-
-
-
-
-
-   
   	
   }
 
@@ -341,14 +347,7 @@ return location
         })
      }  
 
- 
-  
-
-
 	render() {
-
-
-
 		return (
 			<Grid>
 			<Row>
@@ -358,10 +357,10 @@ return location
         <br/>
         <Row>
         <Col md={6}>
-    <Button onClick={this.confirmPolyline} block bsStyle="warning">Limpiar Mapa</Button>
+    <Button onClick={this.resetPolyline} block bsStyle="warning">Empezar desde el principio</Button>
     </Col>
     <Col md={6}>
-    <Button onClick={this.confirmPolyline} block bsStyle="success">Confirmar</Button>
+    <Button onClick={this.confirmPolyline} block bsStyle="success">Confirmar ruta en el mapa</Button>
     </Col>
     </Row>
     <br/>
@@ -370,7 +369,7 @@ return location
       <Col md={10}>
            <Col md={4}>
                 <FormGroup> 
-                <ControlLabel>País
+                <ControlLabel>País *
                 </ControlLabel> 
                 <CountryDropdown
                 value = {
@@ -385,7 +384,7 @@ return location
                 </Col>
             <Col md={4}>
                 <FormGroup> 
-                <ControlLabel>Estado
+                <ControlLabel>Estado *
                 </ControlLabel> 
                 
                 <RegionDropdown
@@ -404,7 +403,7 @@ return location
              </Col>
              <Col md={4}>
                   <FormGroup>
-                     <ControlLabel>Ciudad </ControlLabel> <FormControl
+                     <ControlLabel>Ciudad * </ControlLabel> <FormControl
                   type='text'
                   value={this.state.shippingCity}
                   placeholder='Ciudad'
@@ -417,7 +416,7 @@ return location
                   </Col>
 
     			<Col md={4}>
-        			<ControlLabel>Nombre de la ruta</ControlLabel>
+        			<ControlLabel>Nombre de la ruta *</ControlLabel>
         				<input name="title" value={this.state.title} onChange={this.handleInputChange}  className="form-control" type="text" />
         		</Col>
         		<Col md={4}>
@@ -429,7 +428,7 @@ return location
         				<input name="difficulty" value={this.state.difficulty} onChange={this.handleInputChange}  className="form-control" type="text" />
         				</Col>
       			<Col md={6}>
-        				<ControlLabel>Descripción de la ruta</ControlLabel>
+        				<ControlLabel>Descripción de la ruta *</ControlLabel>
         				<textarea name="description" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" />
     				</Col>
             <Col md={6}>

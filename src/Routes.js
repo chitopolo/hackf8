@@ -37,10 +37,15 @@ export default class RoutesList extends Component {
 		}, this)
 	}
 	render() {
+		var eachElement = {
+			paddingBottom:'25px',
+			paddingTop:'25px',
+			borderBottom:'1px solid #ccc'
+		}
 		return (
 			<Grid>
 						{_.map(this.state.routes, function(value, key){
-							return <div key={key}>
+							return <div key={key} style={eachElement}>
 					<Row>
 						<Col md={3}>
 						{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
@@ -62,8 +67,8 @@ export default class RoutesList extends Component {
 							</Col>
 							<Col md={3}>
 								<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
-								<Button block  bsSize="xsmall" bsStyle="warning">editar</Button>
-								<Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button>
+								<Link to={'/route/'+key}><Button block  bsSize="xsmall" bsStyle="warning">editar</Button></Link>
+								<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button></Link>
 							</Col>
 							</Row>
 						</Col>

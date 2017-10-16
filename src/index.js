@@ -73,10 +73,6 @@ class Menu extends Component {
       <LinkContainer to="/signup">
         <NavItem eventKey={1} > <span><Image circle  style={{height:'25px'}} src={this.state.userSavedData.avatar}/></span>  {this.state.userSavedData.displayName || "Login"}</NavItem>
     </LinkContainer>
-
-    <LinkContainer to="/">
-        <NavItem eventKey={2} >?</NavItem>
-    </LinkContainer>
       </Nav>
     </Navbar.Collapse>
   </Navbar>

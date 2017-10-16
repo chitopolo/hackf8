@@ -56,7 +56,7 @@ const MapWithADrawingManager = compose(
 
 
 
-class RouteCreator extends Component {
+class Route extends Component {
 	constructor(props, context){
 		super(props, context)
 		this.state={
@@ -107,6 +107,7 @@ class RouteCreator extends Component {
                 image:snapshot.val().image|| '',
                 images:snapshot.val().images|| '',
                 caution:snapshot.val().caution|| '',
+                polyline:snapshot.val().polyline
             })
         }, this)
     }
@@ -479,4 +480,4 @@ var that = this
 	}
 }
 
-export default withRouter(RouteCreator)
+export default withRouter(Route)
