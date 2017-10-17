@@ -63,10 +63,6 @@ const MapWithADrawingManager = compose(
 
 
 export default class Routes extends React.Component {
-  static propTypes = {
-    name: React.PropTypes.string,
-  };
-
   constructor(props) {
     super(props);
   }
@@ -209,18 +205,18 @@ return location
         console.log('ningun archivo')
           routes.push({
             active:false,
-            title:this.state.title,
-            distance:this.state.distance,
-            description:this.state.description,
-            difficulty:this.state.difficulty,
+            title:that.state.title,
+            distance:that.state.distance,
+            description:that.state.description,
+            difficulty:that.state.difficulty,
             caution:that.state.caution,
-            city:this.state.city,
-            country:this.state.country,
-            state:this.state.state,
-            polyline:this.state.polyline,
-            actualLat:this.state.actualLat,
-            actualLon:this.state.actualLon,
-            createdBy:this.state.userId,
+            city:that.state.city,
+            country:that.state.country,
+            state:that.state.state,
+            polyline:that.state.polyline,
+            actualLat:that.state.actualLat,
+            actualLon:that.state.actualLon,
+            createdBy:that.state.userId,
             image:false
           })
         })
