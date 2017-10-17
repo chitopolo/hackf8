@@ -5,6 +5,7 @@ import About from './About';
 import Topics from './Topics';
 import RouteCreator from './RouteCreator';
 import Routes from './Routes';
+import SitnupToMailingList from './SignupToMailingList';
 import Signup from './Signup';
 import RouteView from './Route';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
@@ -12,6 +13,8 @@ import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/fir
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {LinkContainer} from 'react-router-bootstrap'
 import {Navbar, Nav, MenuItem, NavItem, Grid, Image} from 'react-bootstrap'
+
+
 
 class Menu extends Component {
   constructor(props){
@@ -66,6 +69,10 @@ class Menu extends Component {
         <NavItem eventKey={4} >Topics</NavItem>
     </LinkContainer>
 
+      <LinkContainer to="/mailingList">
+        <NavItem eventKey={5} >Mailing List</NavItem>
+    </LinkContainer>
+
 
 
       </Nav>
@@ -82,6 +89,7 @@ class Menu extends Component {
         <Route exact path="/" component={Home}/>
 
         <Route exact path="/signup" component={Signup}/>
+        <Route exact path="/mailingList" component={SitnupToMailingList}/>
         <Route exact path="/about" component={About}/>
         <Route exact path="/route/create" component={RouteCreator}/>
         <Route exact path="/routes" component={Routes}/>

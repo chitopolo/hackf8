@@ -1,7 +1,7 @@
 import React, { Component} from 'react'
 import Slider from 'react-slick'
 import {Image, Grid, Col, Row} from 'react-bootstrap'
-
+import {Link} from 'react-router-dom'
 
 class Home extends Component {
     render () {
@@ -20,7 +20,7 @@ class Home extends Component {
           <h1 id="homeHeading">Crea o únete a rutas de bici en tu ciudad</h1>
           <hr/>
           <p>Biciruta es una herramienta para crear y organizar salidas de tu club o de forma independiente</p>
-          <a className="btn btn-primary btn-xl js-scroll-trigger" href="#about">Ver las rutas</a>
+          <Link to="/routes"> <a className="btn btn-primary btn-xl js-scroll-trigger">Ver las rutas</a></Link>
         </div>
       </div>
     </header>
@@ -32,7 +32,7 @@ class Home extends Component {
             <h2 className="section-heading text-white">¡Sigamos pedaleando juntos!</h2>
             <hr className="light"/>
             <p className="text-faded">¡Biciruta es muy sencillo de utilizar, simplemente busca las rutas de tu ciudad, únete u organiza una!</p>
-            <a className="btn btn-default btn-xl js-scroll-trigger" href="#services">¡Crea tu cuenta ahora!</a>
+           <Link to="/signup">  <a className="btn btn-default btn-xl js-scroll-trigger">¡Crea tu cuenta ahora!</a></Link>
           </Col>
         </div>
       </Grid>

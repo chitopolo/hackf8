@@ -414,7 +414,8 @@ var that = this
             </Col>
     </Row> 
 
-    <h2>Fotografías de la ruta</h2>   {(this.state.editMode) ? <Row>
+    {(Object.keys(this.state.aditionalImages).length) ?<h2>Fotografías de la ruta</h2>:null}  
+     {(this.state.editMode) ? <Row>
       <Col md={4}>
           
           <Row>
