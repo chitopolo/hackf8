@@ -156,7 +156,7 @@ export default class RoutesList extends Component {
 						
 						</Row>
 						</div>
-						})}</div>:<h1>No se encontraron rutas</h1>}
+						})}</div>:<h1>Escoge una ciudad para ver las rutas disponibles</h1>}
 						
 				
 			</Grid>

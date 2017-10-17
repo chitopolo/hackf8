@@ -99,7 +99,7 @@ export class RouteCreator extends Component {
       image:'',
       createdBy:'',
       progress:'',
-      userSavedData:''
+      userSavedData:'',
 		}
 	}
 
@@ -347,7 +347,7 @@ return location
 		return (
 			<Grid>
 			<Row>
-    <h1>Creador de Rutas</h1>
+    <h1>Creador de rutas</h1>
       {(this.state.actualLat && this.state.actualLat)? 
         <MapWithADrawingManager lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
         <br/>
@@ -360,6 +360,7 @@ return location
     </Col>
     </Row>
     <br/>
+    {(this.state.polyline.length > 1)?
     <Row>
 		  <h1>Detalles de la ruta</h1>
       <Col md={10}>
@@ -439,7 +440,7 @@ return location
                     </Dropzone>
                         {this.state.files.length > 0 ? <div>
                          <h2>Uploading {this.state.files.length} files...</h2>
-                         <div>{this.state.files.map((file) => <Image src={file.preview} responsive/> )}</div>
+                         <div>{this.state.files.map((file, key) => <Image key={key} src={file.preview} responsive/> )}</div>
 
                          {this.state.files.map((file) => <div>{file.preview} </div> )}
                          </div> : null}
@@ -448,8 +449,9 @@ return location
        <Button bsStyle="primary" block onClick={this.addItem}>Añadir</Button>
 
       </Col>
-      </Row>
+      </Row>: null}
 			</Row>
+
 			</Grid>
 		);
 	}

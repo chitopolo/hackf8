@@ -300,28 +300,31 @@ var that = this
     var imageBackgroundToShow = this.state.image || './../static/img/bicirutabw.png'
     var titleStyle= {
       height: '100px',
-      fontSize: '30px',
+      fontSize: '40px',
       textAlign: 'center',
       padding: '10px',
       marginTop: '150px',
       display: 'flex',
+      color:'white',
       justifyContent: 'center', 
       alignItems: 'center', 
-      backgroundColor:'white',
-      boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
       textAlign: 'center',
-       opacity: 0.9
+       opacity: 0.9,
+
     }
     var backgroundStyle = {
 
-      position: 'fixed',
+      position: 'absolute',
       left: 0,
       right: 0,
       zIndex: 1,  
-      backgroundImage: 'url('+imageBackgroundToShow+')',
+      backgroundImage: 'linear-gradient(to right, red, #f06d06',
       position:'relative',
-      minHeight:'500px',
-      display: 'block'
+      maxHeight:'500px',
+      display: 'block',
+      backgroundRepeat:'no-repeat',
+      minWidth:'auto',
+
     }
 
     var descriptionStyle = {
@@ -346,6 +349,8 @@ var that = this
     }
     var primaryImage = {
       marginTop:'60px',
+      maxHeight:'400px',
+      marginBottom:'60px'
 
     }
 		return (
@@ -409,7 +414,7 @@ var that = this
     <Row style={{paddingTop:'100px', paddingBottom:'100px'}}>
       <br/>
         <Col md={12}>
-        <h3>Precauciones de la Ruta  </h3>
+        {(this.state.caution) ? <h3>Precauciones de la Ruta  </h3> : null}
             <p style={descriptionStyle}>{(this.state.editMode) ? <textarea name="caution" value={this.state.caution} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.caution}</div>} </p>
             </Col>
     </Row> 
