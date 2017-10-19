@@ -1,8 +1,12 @@
 import React from 'react';
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
-import { Button, Grid, Row, Col, ControlLabel } from 'react-bootstrap'
+import { Button, Grid, Row, Col, ControlLabel, Image } from 'react-bootstrap'
 import Notifications, {notify} from 'react-notify-toast';
 import firebase from 'firebase'
+import _ from 'underscore'
+
+import {Link} from 'react-router-dom'
+
 function userExistsCallback(userId, exists) {
   if (exists) {
     alert('user ' + userId + ' exists!');
@@ -22,11 +26,17 @@ export default class Signup extends React.Component {
     this.state = {
       user:'',
       password:'',
-      uid:null
+      uid:null,
+      filteredRoutes:{},
+      routes:{},
+      userId:'',
+      rides:{}
     }
   }
    componentWillMount(){
       var that = this
+
+
      var user = firebaseAuth.onAuthStateChanged(function(user) {
        if (user) {
          console.log(user.uid)
@@ -39,9 +49,45 @@ export default class Signup extends React.Component {
                 userSavedData: value.val(),
                 userId: user.uid,
             })
+
+
+              var routes = firebaseDb.ref('routes')
+              routes.on('value', function(snapshot){
+                that.setState({
+                  routes:snapshot.val()
+                })
+              })
+
+
+
+              var filteredRoutes = []
+              var newObject = {}
+              var userSavedData = firebaseDb.ref('users/'+user.uid)
+              userSavedData.child('routes').on('value', function(snapshot){
+                console.log('snapshot.val(): ', snapshot.val())
+                _.each(snapshot.val(), function(value, key){
+                    console.log('routes[key]: ', that.state.routes,that.state.routes[key], value, key)
+
+                  if(that.state.routes[key]){
+                    
+                    console.log('routes[key]: ', that.state.routes[key])
+                    newObject[key]= that.state.routes[key]
+                    console.log('adding newObject: ', newObject)
+                    that.setState({
+                      filteredRoutes:newObject
+                    })    
+                  }
+                })
+
+              })
+
         })
        } 
      });
+
+
+
+
   }
   
   sendCredential(provider){
@@ -152,16 +198,61 @@ export default class Signup extends React.Component {
        FbCredential.addScope('user_birthday');
    var GithubProvider = new firebase.auth.GithubAuthProvider();
     GithubProvider.addScope('repo');
-
+    var eachElement = {
+      borderBottom:'1px solid #ccc'
+    }
     return (
+
       <div>
 
       {console.log('userId: ',this.state.userId)}
 
         {(this.state.userId)? <Grid>
           
-          <h2>{this.state.userSavedData.displayName}</h2>
+          <Row>
+            <Col md={2}><Image src={this.state.userSavedData.avatar} responsive thumbnail/></Col>
+            <Col md={10}><h2> {this.state.userSavedData.displayName}</h2></Col>
+          </Row>
+          <Row>
+          <Col md={6}>
+             {(Object.keys(this.state.filteredRoutes).length> 0) ? <h3>Rutas creadas</h3>: null}
 
+            { (Object.keys(this.state.filteredRoutes).length > 0) ? <div>{_.map(this.state.filteredRoutes, function(value, key){
+              console.log('value: ', value , " key: ", key)
+              return <div key={key} style={eachElement}>
+          <Row>
+            <Col md={2}>
+            { value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
+            </Col>
+
+            <Col md={10}>
+              <Row>
+                <Col md={8}>
+                  <h3>{value.title}</h3>
+                </Col>
+                <Col md={4} style={{fontSize:'1.2em'}}>
+                <br/>
+                   {value.distance && <span><b>Distancia:</b> {value.distance}</span>}  {value.difficulty && <span><b>Dificultad:</b> {value.difficulty}</span>}
+                </Col>
+              </Row>
+              <Row>
+              <Col md={9}>
+                  <p>{value.description.substring(0,140)+'...'}</p>
+              </Col>
+              <Col md={3}>
+                <Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="primary">Ver</Button></Link>
+              </Col>
+              </Row>
+            </Col>
+            
+            </Row>
+            </div>
+            })}</div>:null}
+            </Col>
+            <Col md={6}>
+            {(Object.keys(this.state.rides).length> 0) ? <h3>Salidas creadas</h3>: null}
+            </Col>
+          </Row>
 
 
         </Grid>: <Grid>

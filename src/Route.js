@@ -242,7 +242,13 @@ class Route extends Component {
       [name]: value
     });
   }
-
+  disableRoute = () =>{
+      var RouteId = this.props.match.params.key
+        var RouteData = firebaseDb.ref('routes').child(RouteId)
+        RouteData.update({
+          active:false
+        })
+  }
 
    addImage = ()=> {
 var that = this
@@ -361,7 +367,7 @@ var that = this
       <Grid>{(this.state.userSavedData.permissions <= 10) ? 
         <Row>
         <Col md={4}><Button bsStyle="warning" block onClick={this.editData}>Editar</Button></Col>
-        <Col md={4}><Button bsStyle="danger" block>Desactivar</Button></Col>
+        <Col md={4}><Button bsStyle="danger" onClick={this.disableRoute} block>Desactivar</Button></Col>
         <Col md={4}>{(this.state.editMode)? <Button bsStyle="info" block onClick={this.saveData}>Guardar Cambios</Button>: null }</Col>
         </Row>
         :null} </Grid>
@@ -387,18 +393,27 @@ var that = this
             </div>
 
 <Grid>          
+  
+
+
 <Row style={{paddingTop:'100px', paddingBottom:'100px'}}>
-      <br/>
+      <br/> 
         <Col md={9}>
         <h3>Descripción  </h3>
             <p style={descriptionStyle}>{(this.state.editMode) ? <textarea name="title" value={this.state.description} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.description}</div>} </p>
-            </Col>
-            <Col md={3}>
             <Row>
+            <Col md={6}>
             <h3>Nivel:</h3> {(this.state.editMode) ? <input name="difficulty" value={this.state.difficulty} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.difficulty}</div>} 
+            </Col>
+            <Col md={6}>
             <h3>Distancia (Km):</h3> {(this.state.editMode) ? <input name="distance" value={this.state.distance} onChange={this.handleInputChange}  className="form-control" type="text" /> : <div>{this.state.distance}</div>}  
+            </Col>
             <br/>
             </Row>
+            </Col>
+            <Col md={3}>
+              <h3>Calendario de salidas</h3>
+
             </Col>
     </Row>  
             </Grid>

@@ -7,6 +7,7 @@ import RouteCreator from './RouteCreator';
 import Routes from './Routes';
 import SitnupToMailingList from './SignupToMailingList';
 import Signup from './Signup';
+import Rides from './Rides';
 import RouteView from './Route';
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'
 import {firebaseDb, firebaseAuth, firebaseStorage} from './../dist/static/js/firebase';
@@ -65,8 +66,8 @@ class Menu extends Component {
     <LinkContainer to="/routes">
         <NavItem eventKey={3} >Rutas</NavItem>
     </LinkContainer>
-     <LinkContainer to="/topics">
-        <NavItem eventKey={4} >Topics</NavItem>
+     <LinkContainer to="/rides">
+        <NavItem eventKey={4} >Salidas</NavItem>
     </LinkContainer>
 
       <LinkContainer to="/mailingList">
@@ -92,6 +93,7 @@ class Menu extends Component {
         <Route exact path="/mailingList" component={SitnupToMailingList}/>
         <Route exact path="/about" component={About}/>
         <Route exact path="/route/create" component={RouteCreator}/>
+        <Route exact path="/rides" component={Rides}/>
         <Route exact path="/routes" component={Routes}/>
         <Route exact path="/route/:key" component={RouteView}/>
         <Route exact path="/topics" component={Topics}/>

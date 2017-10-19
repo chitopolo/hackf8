@@ -347,7 +347,7 @@ return location
 		return (
 			<Grid>
 			<Row>
-    <h1>Creador de rutas</h1>
+    <h3>Creador de rutas</h3>
       {(this.state.actualLat && this.state.actualLat)? 
         <MapWithADrawingManager lat={this.state.actualLat} lon={this.state.actualLon}/>:null }
         <br/>
@@ -497,7 +497,6 @@ export class RoutesList extends Component {
 						<td>{value.difficulty}</td>
 						<td>
 						<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
-						<Button block  bsSize="xsmall" bsStyle="warning">editar</Button>
 						<Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button>
 						</td>
 						</tr>

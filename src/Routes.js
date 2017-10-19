@@ -28,16 +28,29 @@ export default class RoutesList extends Component {
 			routes:{},
 			country:'',
 			state:'',
-			filteredRoutes:{}
+			filteredRoutes:{},
+			featured:{}
 		}
 	}
 	componentWillMount(){
-		var routes = firebaseDb.ref('routes')
+
+
+		var routes = firebaseDb.ref('routes').orderByChild('active').equalTo(true)
 		routes.on('value', function(snapshot){
 			this.setState({
 				routes:snapshot.val()
 			})
 		}, this)
+
+		if(Object.keys(this.state.filteredRoutes).length == 0){
+			var routes = firebaseDb.ref('routes').orderByChild('active').equalTo(true)
+		routes.on('value', function(snapshot){
+			this.setState({
+				featured:snapshot.val()
+			})
+		}, this)
+		} 
+		
 	}
 	 selectCountry = (val) => {
     console.log('val country:', val)
@@ -48,6 +61,14 @@ export default class RoutesList extends Component {
     this.setState({state: val});
   }
   searchRoutes = () =>{
+
+
+  	this.setState({
+				featured:{}
+	})
+
+
+
   	var that = this
   	var routes = firebaseDb.ref('routes')
   	var locations = firebaseDb.ref('locations')
@@ -56,6 +77,8 @@ export default class RoutesList extends Component {
   	locations.child(this.state.country).child(this.state.state).on('value', function(snapshot){
   		console.log('snapshot.val(): ', snapshot.val())
   		_.each(snapshot.val(), function(value, key){
+  				console.log('routes[key]: ', that.state.routes[key])
+
   			if(that.state.routes[key]){
   				
   				console.log('routes[key]: ', that.state.routes[key])
@@ -63,7 +86,7 @@ export default class RoutesList extends Component {
   				console.log('adding newObject: ', newObject)
   				that.setState({
   					filteredRoutes:newObject
-  				})
+  				})		
   			}
   		})
 
@@ -156,7 +179,39 @@ export default class RoutesList extends Component {
 						
 						</Row>
 						</div>
-						})}</div>:<h1>Escoge una ciudad para ver las rutas disponibles</h1>}
+						})}</div>: <div><h1>Ultimas rutas añadidas</h1>{_.map(this.state.featured, function(value, key){
+							console.log('value: ', value , " key: ", key)
+							return <div key={key} style={eachElement}>
+					<Row>
+						<Col md={3}>
+						{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}
+						</Col>
+
+						<Col md={9}>
+							<Row>
+								<Col md={8}>
+									<h2>{value.title}</h2>
+								</Col>
+								<Col md={4} style={{fontSize:'1.2em'}}>
+								<br/>
+									 {value.distance && <span><b>Distancia:</b> {value.distance}</span>}  {value.difficulty && <span><b>Dificultad:</b> {value.difficulty}</span>}
+								</Col>
+							</Row>
+							<Row>
+							<Col md={9}>
+									<p>{value.description.substring(0,400)+'...'}</p>
+							</Col>
+							<Col md={3}>
+								<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="info">Ver</Button></Link>
+								<Link to={'/route/'+key}><Button block  bsSize="xsmall" bsStyle="warning">editar</Button></Link>
+								<Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="danger">deshabilitar</Button></Link>
+							</Col>
+							</Row>
+						</Col>
+						
+						</Row>
+						</div>
+						})}</div>}
 						
 				
 			</Grid>
