@@ -27,7 +27,9 @@ export default class Rides extends Component {
     	rides:{},
     	selectedRoute:'',
     	userSavedData:'',
-    	userId:''
+    	userId:'',
+    	active:false,
+    	createdBy:''
     }
   }
   componentWillMount(){
@@ -83,16 +85,18 @@ export default class Rides extends Component {
   	var userData = firebaseDb.ref('users/'+this.state.userId)
   	var dataToSave = {
   		route:this.state.selectedRoute,
-  		meetingTime:Moment(this.state.meetingTime).format(),
-  		start:Moment(this.state.start).format(),
-  		end:Moment(this.state.end).format(),
+  		meetingTime:Moment(this.state.meetingTime).format('LT'),
+  		start:Moment(this.state.start).format('LT'),
+  		end:Moment(this.state.end).format('LT'),
+  		date:Moment(this.state.date).format(),
   		cost:this.state.cost,
   		recomendations:this.state.recomendations,
+  		createdBy:this.state.userId
 
   	}
   	console.log(dataToSave)
   	var savedRide =	rides.push(dataToSave)
-  	userData.child('rides').child(savedRide).set(true)
+  	userData.child('rides').child(savedRide.key).set(true)
 
   }
 
@@ -125,7 +129,7 @@ export default class Rides extends Component {
       		  	<ControlLabel>Fecha de salida</ControlLabel>
 
 		      	<DateTimePicker
-		      	  value={this.state.meetingTime}
+		      	  value={this.state.date}
 		      	  defaultValue={new Date()}
 		      	  time={false}
 		      	  onChange={meetingTime => this.setState({ meetingTime })}
@@ -186,13 +190,67 @@ class RidesList extends Component {
 	constructor(props){
 		super(props)
 		this.state = {
-			rides:{}
+			rides:{},
+			routes:{},
+			users:{}
 		}
 	}
+	componentWillMount(){
+		firebaseDb.ref('rides').on('value', function(snapshot){
+			this.setState({
+				rides:snapshot.val()
+			})
+		}, this)
+		firebaseDb.ref('routes').on('value', function(snapshot){
+			this.setState({
+				routes:snapshot.val()
+			})
+		}, this)
+		firebaseDb.ref('users').on('value', function(snapshot){
+			this.setState({
+				users:snapshot.val()
+			})
+		}, this)
+	}
 	render() {
+		var that = this
 		return (
 			<div>
 				<h3>Lista de salidas</h3>
+				{(Object.keys(this.state.rides).length > 0) ? 
+					<div>
+					<Table>
+							<thead>
+						      <tr>
+						        <th>Ruta</th>
+						        <th>Recomendaciones</th>
+						        <th>Costo</th>
+						        <th>Fecha de salida</th>
+						        <th>Punto de encuentro</th>
+						        <th>Salida</th>
+						        <th>Regreso aproximado</th>
+						        <th>Creado por</th>
+					          </tr>
+					        </thead>
+					        <tbody>
+
+					{_.map(this.state.rides, function(value, key){
+						return <tr key={key}>
+					        {(that.state.routes[value.route.id]) ? <td>{that.state.routes[value.route.id].title}</td>: <td></td>}
+					        <td>{value.recomendations}</td>
+					        <td>{value.cost}</td>
+					        <td>{Moment(value.date).format('LLLL')}</td>
+					        <td>{value.meetingTime}</td>
+					        <td>{value.start}</td>
+					        <td>{value.end}</td>
+					        {console.log('value.createdBy: ', value.createdBy)}
+					        {(Object.keys(that.state.users).length && value.createdBy) ? <td>{that.state.users[value.createdBy].displayName || ''}</td>: <td></td>}
+    				    </tr>
+					})}
+					        </tbody>
+						</Table>
+					</div>: <div></div>}
+
 			</div>
 		);
 	}

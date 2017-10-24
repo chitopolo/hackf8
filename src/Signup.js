@@ -28,6 +28,7 @@ export default class Signup extends React.Component {
       password:'',
       uid:null,
       filteredRoutes:{},
+      filteredRides:{},
       routes:{},
       userId:'',
       rides:{}
@@ -35,6 +36,19 @@ export default class Signup extends React.Component {
   }
    componentWillMount(){
       var that = this
+  var routes = firebaseDb.ref('routes')
+              routes.on('value', function(snapshot){
+                that.setState({
+                  routes:snapshot.val()
+                })
+              })
+
+              var rides = firebaseDb.ref('rides')
+              rides.on('value', function(snapshot){
+                that.setState({
+                  rides:snapshot.val()
+                })
+              })
 
 
      var user = firebaseAuth.onAuthStateChanged(function(user) {
@@ -49,22 +63,11 @@ export default class Signup extends React.Component {
                 userSavedData: value.val(),
                 userId: user.uid,
             })
-
-
-              var routes = firebaseDb.ref('routes')
-              routes.on('value', function(snapshot){
-                that.setState({
-                  routes:snapshot.val()
-                })
-              })
-
-
-
               var filteredRoutes = []
               var newObject = {}
               var userSavedData = firebaseDb.ref('users/'+user.uid)
               userSavedData.child('routes').on('value', function(snapshot){
-                console.log('snapshot.val(): ', snapshot.val())
+                console.log('snapshot.val routes (): ', snapshot.val())
                 _.each(snapshot.val(), function(value, key){
                     console.log('routes[key]: ', that.state.routes,that.state.routes[key], value, key)
 
@@ -80,13 +83,33 @@ export default class Signup extends React.Component {
                 })
 
               })
+              var filteredRides= []
+              var newObjectRides = {}
+               userSavedData.child('rides').on('value', function(snapshot){
+                console.log('snapshot.val rides(): ', snapshot.val())
+                _.each(snapshot.val(), function(value, key){
+                    console.log('rides[key]: ', that.state.rides ,that.state.rides[key], value, key)
 
+                  if(that.state.rides[key]){
+                    
+                    console.log('rides[key]: ', that.state.rides[key])
+                    newObjectRides[key]= that.state.rides[key]
+                    console.log('adding newObjectRides: ', newObjectRides)
+                    that.setState({
+                      filteredRides:newObjectRides
+                    })    
+                  }
+                })
+              })
         })
        } 
      });
 
 
 
+
+  }
+  componentDidMount(){
 
   }
   
@@ -102,11 +125,7 @@ export default class Signup extends React.Component {
         avatar:user.providerData[0].photoURL,
         permissions:50
       }
-     
-
-          var newUser = firebaseDb.ref('users')
-
-
+      var newUser = firebaseDb.ref('users')
       newUser.child(user.uid).once('value', function(snapshot) {
         var exists = (snapshot.val() !== null);
         if(!exists){
@@ -116,12 +135,8 @@ export default class Signup extends React.Component {
         }
       });
     notify.show("Bienvenid@ "+ user.displayName , "success");
-
-
-
     }).catch(function(error) {
         console.error(error)
-        
     });
   }
 
@@ -160,10 +175,6 @@ export default class Signup extends React.Component {
       });
 
     }).catch(function(error) {
-      
-
-
-
       console.log('error: ', error)
       // Handle Errors here.
       notify.show(error.message, "error");  
@@ -201,8 +212,9 @@ export default class Signup extends React.Component {
     var eachElement = {
       borderBottom:'1px solid #ccc'
     }
-    return (
+var that = this
 
+    return (
       <div>
 
       {console.log('userId: ',this.state.userId)}
@@ -250,7 +262,36 @@ export default class Signup extends React.Component {
             })}</div>:null}
             </Col>
             <Col md={6}>
-            {(Object.keys(this.state.rides).length> 0) ? <h3>Salidas creadas</h3>: null}
+            {(Object.keys(this.state.filteredRides).length> 0) ? <h3>Salidas creadas</h3>: null}
+
+            { (Object.keys(this.state.filteredRides).length > 0) ? <div>{_.map(this.state.filteredRides, function(value, key){
+              console.log('value: ', value , " key: ", key)
+              return <div key={key} style={eachElement}>
+          <Row>
+            <Col md={12}>
+              <Row>
+                <Col md={8}>
+                  {console.log('routes: ', that.state.routes, ' value: ', value.route.id)}
+                  {(that.state.routes[value.route.id]) ? <h3>{that.state.routes[value.route.id].title}</h3>:<h3>nada</h3>}
+                </Col>
+                <Col md={4} style={{fontSize:'1.2em'}}>
+                <br/>
+                   {value.meetingTime && <span><b>Encuentro:</b> {value.meetingTime}</span>}  {value.start && <span><b>Salida:</b> {value.start}</span>} {value.end && <span><b>Retorno:</b> {value.end}</span>}
+                </Col>
+              </Row>
+              <Row>
+              <Col md={9}>
+                  <p>{value.recomendations.substring(0,140)+'...'}</p>
+              </Col>
+              <Col md={3}>
+                <Link to={'/route/'+key}><Button block bsSize="xsmall" bsStyle="primary">Ver</Button></Link>
+              </Col>
+              </Row>
+            </Col>
+            
+            </Row>
+            </div>
+            })}</div>:null}
             </Col>
           </Row>
 
