@@ -630,7 +630,7 @@ function sendGenericMessage(recipientId) {
             title: "Mountains",
             subtitle: "Beautiful places that you won't even imagine they existed",
             item_url: "https://biciruta.azurewebsites.net/",               
-            image_url: "/static/img/mountain.jpg",
+            image_url: "https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwid8qWQ3ebaAhUmwlQKHSQyBIkQjRx6BAgBEAU&url=https%3A%2F%2Fwww.redbull.com%2Fus-en%2Fmountain-biking-in-the-dolomites-val-gardena-guide&psig=AOvVaw2kWlhno2v3q1SXNTPXFKVY&ust=1525340182783875",
             buttons: [{
               type: "postback",
               title: "Montaña",
@@ -640,7 +640,7 @@ function sendGenericMessage(recipientId) {
             title: "Road Bike",
             subtitle: "Road Biking for you and your family",
             item_url: "https://biciruta.azurewebsites.net/",               
-            image_url: "/static/img/roadbike.jpg",
+            image_url: "https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwj7mYel3-baAhXpq1QKHeH3ByUQjRx6BAgBEAU&url=https%3A%2F%2Fwww.rei.com%2Flearn%2Fexpert-advice%2Fhow-to-choose-road-bikes.html&psig=AOvVaw2CEu43eTpDpmZbSuFBfEsJ&ust=1525340763733628",
             buttons: [{
               type: "web_url",
               url: "http://www.universiclick.com/curso/photoshop",
