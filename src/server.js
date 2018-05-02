@@ -331,13 +331,19 @@ function receivedMessage(event) {
 
             sendTextMessage(senderID, msg);
             
-            setTimeout(sendTypingOn(senderID), 1000)
-
+setTimeout(function () {
+  console.log('wait')
+}, 1000)
+            sendTypingOn(senderID)
 
             sendTextMessage(senderID, 'Let me find good routes nearby ');
 
-            setTimeout(sendTypingOn(senderID), 1000)
-            
+
+setTimeout(function () {
+  console.log('wait')
+}, 1000)
+
+            sendTypingOn(senderID)
 
             sendSuggestions(senderID)
   }
