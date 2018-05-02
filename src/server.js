@@ -252,29 +252,9 @@ function receivedMessage(event) {
 
 
 
-     var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text: "We don't have anything planned for that distance, please we invite you to create a route of that size",
-          buttons:[{
-            type: "web_url",
-            url: "https://biciruta.azurewebsites.net/",
-            title: "Go to Biciruta"
-          }]
-        }
-      }
-    }
-  };  
 
-  callSendAPI(messageData);
 
-    // sendTextMessage(senderID, "We don't have anything planned for that distance, please we invite you to create a route of that size");
+    sendTextMessage(senderID, "We don't have anything planned for that distance, please we invite you to create a route of that size go to https://biciruta.azurewebsites.net/");
     return;
   }
 
