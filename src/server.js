@@ -262,6 +262,10 @@ function receivedMessage(event) {
         sendAudioMessage(senderID);
         break;
 
+      case 'find routes in bolivia':
+        findRoutesInBolivia(senderID);
+        break;
+
       case 'video':
         sendVideoMessage(senderID);
         break;
@@ -282,9 +286,12 @@ function receivedMessage(event) {
         sendReceiptMessage(senderID);
         break;
 
-      case 'quick reply':
-        sendQuickReply(senderID);
-        break;        
+      case 'Routes by level':
+        routeByLevel(senderID);
+        break;
+      case 'Routes by distance':
+        routeByDistance(senderID);
+        break;            
 
       case 'read receipt':
         sendReadReceipt(senderID);
@@ -563,6 +570,48 @@ function sendButtonMessage(recipientId) {
   callSendAPI(messageData);
 }
 
+
+
+/*
+ * Send a button message using the Send API.
+ *
+ */
+function findRoutesInBolivia(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "Select the route type that you want",
+          buttons:[{
+            type: "postbackMountains",
+            title: "Mountains",
+            payload: "DEVELOPER_DEFINED_PAYLOAD"
+
+          }, {
+            type: "postbackRoad",
+            title: "Road",
+            payload: "DEVELOPER_DEFINED_PAYLOAD"
+          }, {
+            type: "postbackForest",
+            title: "Forest",
+            payload: "DEVELOPER_DEFINED_PAYLOAD"
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+
+
+  sendGenericMessage(recipientId)
+}
+
 /*
  * Send a Structured Message (Generic Message type) using the Send API.
  *
@@ -578,24 +627,20 @@ function sendGenericMessage(recipientId) {
         payload: {
           template_type: "generic",
           elements: [{
-            title: "Universiclick",
-            subtitle: "Profesionalizate desde donde tú quieras!",
-            item_url: "https://universiclick.com/",               
-            image_url: "https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/15826145_568971989974591_525371669703543395_n.png?oh=54ff968d88e4b0c71b2218d21d376f95&oe=58D7512B",
+            title: "Mountains",
+            subtitle: "Beautiful places that you won't even imagine they existed",
+            item_url: "https://biciruta.azurewebsites.net/",               
+            image_url: "/static/img/mountain.jpg",
             buttons: [{
-              type: "web_url",
-              url: "https://www.universiclick.com/curso/curso-bsico-intensivo-de-javascript-desde-0",
-              title: "Javascript"
-            }, {
               type: "postback",
-              title: "Ver más información",
+              title: "Montaña",
               payload: "Payload for first bubble",
             }],
           }, {
-            title: "Photoshop",
-            subtitle: "Aprende photoshop",
-            item_url: "https://www.universiclick.com/curso/photoshop",               
-            image_url: "https://firebasestorage.googleapis.com/v0/b/project-4497057642811650248.appspot.com/o/images%2Fcourses%2F444444.jpg?alt=media&token=d7920344-34b0-4124-85da-7518ec270f12",
+            title: "Road Bike",
+            subtitle: "Road Biking for you and your family",
+            item_url: "https://biciruta.azurewebsites.net/",               
+            image_url: "/static/img/roadbike.jpg",
             buttons: [{
               type: "web_url",
               url: "http://www.universiclick.com/curso/photoshop",
@@ -684,27 +729,63 @@ function sendReceiptMessage(recipientId) {
  * Send a message with Quick Reply buttons.
  *
  */
-function sendQuickReply(recipientId) {
+function routeByLevel(recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: "Hola!, cual es el area de tu interes?, Programación, Diseño, Aministración, edición de video u otros.",
+      text: "¡Great, please chose a type of excersize you want to realize!",
       quick_replies: [
         {
           "content_type":"text",
-          "title":"Action",
+          "title":"Soft",
           "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
         },
         {
           "content_type":"text",
-          "title":"Comedy",
+          "title":"Mid",
           "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
         },
         {
           "content_type":"text",
-          "title":"Drama",
+          "title":"Intensive",
+          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"
+        }
+      ]
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+
+
+/*
+ * Send a message with Quick Reply buttons.
+ *
+ */
+function routeByDistance(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "Chose a distance so I can show you some beautiful routes for the distance you wish",
+      quick_replies: [
+        {
+          "content_type":"text",
+          "title":"< 10 Miles",
+          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
+        },
+        {
+          "content_type":"text",
+          "title":"10 - 20 miles",
+          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
+        },
+        {
+          "content_type":"text",
+          "title":"> 30 miles",
           "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"
         }
       ]
