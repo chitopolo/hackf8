@@ -2,7 +2,6 @@ var express = require("express");
 var path = require("path");
 var bodyParser = require('body-parser')
 var app = express();
-var webpack = require('webpack');
 var node_env = process.env.NODE_ENV || 'development'
 
 app.use(bodyParser.json())
@@ -21,6 +20,8 @@ var serverPort = process.env.PORT || 8080;
 
 
 if(node_env == 'development'){
+  var webpack = require('webpack');
+  
     var config = require('./../webpack.config');
     var compiler = webpack(config);
      console.log('inside development')
