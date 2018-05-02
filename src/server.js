@@ -331,32 +331,36 @@ function receivedMessage(event) {
 
             sendTextMessage(senderID, msg);
             
-setTimeout(function () {
   sendTypingOn(senderID)
-}, 1000)
-            
-
+setTimeout(function () {
             sendTextMessage(senderID, 'Let me find good routes nearby ');
-
-
-setTimeout(function () {
-  sendTypingOn(senderID)
 }, 1000)
+            
+
+
+
+  sendTypingOn(senderID)
 
             
 
+setTimeout(function () {
             sendSuggestions(senderID)
+}, 1000)
 
 
-            sendTextMessage(senderID, 'You can also filter by distance')
 
 
             setTimeout(function () {
-              sendTypingOn(senderID)
+            sendTextMessage(senderID, 'You can also filter by distance')
             }, 1000)
 
-            
-            routeByDistance(senderID)
+              sendTypingOn(senderID)
+
+              
+            setTimeout(function () {
+                routeByDistance(senderID)
+            }, 1000)
+
   }
 }
 
