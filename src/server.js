@@ -1,8 +1,11 @@
+'use strict';
+
 var express = require("express");
 var path = require("path");
 var bodyParser = require('body-parser')
 var app = express();
 var node_env = process.env.NODE_ENV || 'development'
+const logger = require('winston');
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -16,34 +19,26 @@ var MESSENGER_CONFIG = {
     "serverURL": "https://biciruta.azurewebsites.net"
 }
 
-var serverPort = process.env.PORT || 8080;
+// var serverPort = process.env.PORT || 8080;
+app.set('host', process.env.HOST || 'localhost');
+app.set('port', process.env.PORT || 8080);
 
+// if(node_env == 'development'){
+//   var webpack = require('webpack');
 
-if(node_env == 'development'){
-  var webpack = require('webpack');
-  
-    var config = require('./../webpack.config');
-    var compiler = webpack(config);
-     console.log('inside development')
-          app.use(require('webpack-dev-middleware')(compiler, {
-            publicPath: config.output.publicPath
-          }));
-     app.use(require('webpack-hot-middleware')(compiler));
-  }
-
-
-
-
-app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname, "./../dist/index.html"));
-});
+//     var config = require('./../webpack.config');
+//     var compiler = webpack(config);
+//      console.log('inside development')
+//           app.use(require('webpack-dev-middleware')(compiler, {
+//             publicPath: config.output.publicPath
+//           }));
+//      app.use(require('webpack-hot-middleware')(compiler));
+//   }
 
 
 
 
-//Messenger start
 
-// App Secret can be retrieved from the App Dashboard
 const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ? 
   process.env.MESSENGER_APP_SECRET :
   MESSENGER_CONFIG.appSecret;
@@ -832,248 +827,18 @@ function callSendAPI(messageData) {
 
 
 
-// var courses = db.ref("courses");
-// var chats = db.ref("chats");
-// var users = db.ref("users");
-
-
-// courses.on('value', (courses) => {
-//   courses.forEach((childSnapshot) => {
-//     //Here you can access  childSnapshot.key
-//     CoursesList.push(childSnapshot.key)
-//   });
-//     io.on('connection', (socket) => {
-//     console.log('on connection')
-//     //Globals
-//     var defaultRoom = 'general';
-//     //Emit the rooms array
-//     socket.emit('setup', {
-//       rooms: CoursesList
-//     });
-//     //Listens for new user
-//     socket.on('new user', (data) => {
-//       console.log('on new user')
-//       var Room = data.room || defaultRoom ;
-//       //New user joins the default room
-//       socket.join(Room);
-//       //Tell all those in the room that a new user joined
-//       io.in(Room).emit('user joined', data);
-//       console.log('user: ', data.username ,' joined', Room, ' data', data )
-//     });
-//     //Listens for switch room
-//     //Se crea nueva instancia
-//     socket.on('switch room', (data) => {
-//       console.log('switch room')
-//       //Handles joining and leaving rooms
-//       //console.log(data);
-//       socket.leave(data.oldRoom);
-//       socket.join(data.newRoom);
-//       io.in(data.oldRoom).emit('user left', data);
-//       io.in(data.newRoom).emit('user joined', data);
-
-//     });
-//     //Listens for a new chat message
-//     socket.on('new message', (data) => {
-//       console.log('new message')
-//       //Crrear mensaje
-//       var msg = {
-//         username: data.username,
-//         content: data.message,
-//         room: data.room,
-//         created: data.date,
-//         avatar: data.avatar
-//       };
-//       var messageSaved = chats.child(data.room).push().set(msg)
-//       users.child('chats/'+messageSaved.key).set(true)
-//       console.log("msg:", msg, " message saved ", messageSaved.key)
-//       //Save it to database
-//       // newMsg.save(function(err, msg){
-//       //Send message to those connected in the room
-//       io.to(msg.room).emit('message created', msg);
-//       console.log('message created to ' , msg.room)
-//       // });
-//     });
-//     });
-
-// })
-
-
-app.post('/paymentStatus', function(req, res){
-  var data = req.body;
-
-  // res.json(data)
-
-  console.log('got here PAYMENT STATUS req ', req.body)
-
-
-    return res.render(  path.join(__dirname, '../views/paymentstatus.html'), data ) ;
-
-})
-
-
-app.post('/pagos', function(req, res){
-
-  console.log('---> ', req.body)
-    var claveSecreta = 'EGrTtNnqJAszVFzdvA-32737939889'
-    var md = forge.md.sha512.create()
-    var gotThisChunk = req.body.data
-
-    md.update(gotThisChunk+ claveSecreta)
-    console.log(md.digest().toHex())
-
-res.send(md.digest().toHex())
-   //  var idEntCommerce = '400012'
-   //  var codCardHolderCommerce = '205' 
-   //  var names = 'Rene'
-   //  var lastNames = 'Polo'
-   //  var mail = 'renejpolo@me.com' 
-   //  var reserved1 = ''
-   //  var reserved2 = ''
-   //  var reserved3 = ''
-
-
-   //  // var registerVerification = openssl_digest(idEntCommerce+codCardHolderCommerce+mail+claveSecreta, 'sha512')
-
-   //  var claveSecreta = 'rXYxLbTcQLgjGddsaKY*392585235767';
-
-   //  var registerVerification = crypto.createHmac('sha512', idEntCommerce+codCardHolderCommerce+mail+claveSecreta);
-
-   // console.log(`${registerVerification.digest('hex')}`);
-   // var wsdl = 'https://test2.alignetsac.com/WALLETWS/services/WalletCommerce?wsdl'; 
-   // // var client = new SoapClient(wsdl);   
-
-
-   // var params = {
-   // 'idEntCommerce': idEntCommerce, 
-   // 'codCardHolderCommerce': codCardHolderCommerce, 
-   // 'names': names,
-   // 'lastNames': lastNames,
-   // 'mail': mail,
-   // 'reserved1': reserved1, 
-   // 'reserved2': reserved2, 
-   // 'reserved3': reserved3, 
-   // 'registerVerification': registerVerification.digest('hex')
-   // };
-
-   // soap.createClient(wsdl, function(err, client){
-   //  client.RegisterCardHolder(params, function(err, result){
-   //      console.log(result)
-   //  })
-   // })
-     // var url = 'http://example.com/wsdl?wsdl';
-     
-     // var args = {name: 'value'};
-     // soap.createClient(url, function(err, client) {
-     //     client.MyFunction(args, function(err, result) {
-     //         console.log(result);
-     //     });
-     // });
-
-
-
-
-
-})
-
-app.get('/*', (req, res) => {
-    var data = {
-        intento: 'Andy',
-        cosa:'blabla'
-    } ;
-    return res.render(  path.join(__dirname, '../views/welcome.html'), data ) ;
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "./../dist/index.html"));
 });
 
 
 
-app.get('/chat/:classId', function(req, res){
- var classId = req.body.classId
 
-
-})
-
-
-app.get( '/test', function( req, res ) {
-    var data = {
-        intento: 'Andy',
-        cosa:'blabla'
-    } ;
-    return res.render( path.join(__dirname, '../views/welcome.html'), data ) ;
-} ) ;
-
-app.post('/api/suscribed', function(req, res){
-  console.log('body.data: ', typeof(req.body.data))
-    var  emailInfo = JSON.parse(req.body.data) 
-
-    var SENDER_EMAIL= "info@universiclick.com"
-    var FROM_NAME= "Universiclick"
-    var template_name= emailInfo.templateName || "universiclick-mensaje-standard"
-
-    var template_content = [{
-            "name": "example name",
-            "content": "example content",
-        }];
-    var message = {
-        "from_email": SENDER_EMAIL,
-        "subject": emailInfo.subject,
-        "from_name": FROM_NAME,
-        "to": [{
-                "email": emailInfo.recipientEmail,
-                "name": emailInfo.recipientName,
-                "type": "to"
-            }],
-        "headers": {
-            "Reply-To": "info@universiclick.com"
-        },
-        "merge": true,
-        "merge_language": "handlebars",
-        "global_merge_vars": [{
-                "name": "titulo",
-                "content": emailInfo.mailTitle,
-                }, {
-                "name": "contenido",
-                "content": emailInfo.mailContent
-                }],
-      
-        "recipient_metadata": [{
-                "rcpt": emailInfo.recipientEmail,
-                "values": {
-                    "user_id": emailInfo.userId
-                }
-            }],
-    };
-
-
-    var async = false;
-    var ip_pool = null;
-    var send_at = moment().format();
-    mandrill_client.messages.sendTemplate({"template_name": template_name, "template_content": template_content, "message": message, "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
-        console.log(result);
-        /*
-        [{
-                "email": "recipient.email@example.com",
-                "status": "sent",
-                "reject_reason": "hard-bounce",
-                "_id": "abc123abc123abc123abc123abc123"
-            }]
-        */
-
-        res.send('Enviado')
-    }, function(e) {
-      res.send('Error: ', e.message)
-        // Mandrill returns the error as an object with name and message keys
-        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-    });
-})
-
-
-
-app.listen(serverPort, "localhost", function (err) {
-  if (err) {
-    console.log(err);
-    return;
+app.listen(app.get('port'), app.get('host'), error => {
+  if (error) {
+    logger.error(error);
   }
-
-  console.log("Listening at http://localhost:" + serverPort);
+  else {
+    logger.info(`Server listening @ ${app.get('host')}:${app.get('port')}`);
+  }
 });
-
