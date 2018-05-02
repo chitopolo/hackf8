@@ -10,12 +10,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, '../dist')))
 
 
-var config = require('./MessengerConfig')
-
+var MESSENGER_CONFIG = {
+    "appSecret": "1dde38c9e7c669a0ec589e5c7abd4e54",
+    "pageAccessToken": "EAACyHdvJkUIBAKqArz01LIgiudjAdFuUrymAJZBFPZBA0fGsDoWd7B0h9H3HgwigMdVADMStIlAXY0dnWOUH2oAJNwuCCjZBGfXc0U4vw8a3dZB1ntPcAKWTBY8VNm2u1l0CwsBQFBhJ5ZCSywTtza6ZAHyt8knZBL98eDeDFZCJ1QZDZD",
+    "validationToken": "123456789",
+    "serverURL": "https://biciruta.azurewebsites.net"
+}
 
 var serverPort = process.env.PORT || 8080;
 
-var PAGE_ACCESS_TOKEN = "EAACyHdvJkUIBAKqArz01LIgiudjAdFuUrymAJZBFPZBA0fGsDoWd7B0h9H3HgwigMdVADMStIlAXY0dnWOUH2oAJNwuCCjZBGfXc0U4vw8a3dZB1ntPcAKWTBY8VNm2u1l0CwsBQFBhJ5ZCSywTtza6ZAHyt8knZBL98eDeDFZCJ1QZDZD"
 
 if(node_env == 'development'){
     var config = require('./../webpack.config');
@@ -67,7 +70,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
 
 
 
-router.get('/webhook', function(req, res) {
+app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
       req.query['hub.verify_token'] === VALIDATION_TOKEN) {
     console.log("Validating webhook");
@@ -81,7 +84,7 @@ router.get('/webhook', function(req, res) {
 
 
 
-router.post('/webhook', function (req, res) {
+app.post('/webhook', function (req, res) {
   var data = req.body;
 
   // Make sure this is a page subscription
@@ -121,7 +124,7 @@ router.post('/webhook', function (req, res) {
 
 
 
-router.get('/authorize', function(req, res) {
+app.get('/authorize', function(req, res) {
   var accountLinkingToken = req.query.account_linking_token;
   var redirectURI = req.query.redirect_uri;
 
@@ -828,73 +831,73 @@ function callSendAPI(messageData) {
 
 
 
-var courses = db.ref("courses");
-var chats = db.ref("chats");
-var users = db.ref("users");
+// var courses = db.ref("courses");
+// var chats = db.ref("chats");
+// var users = db.ref("users");
 
 
-courses.on('value', (courses) => {
-  courses.forEach((childSnapshot) => {
-    //Here you can access  childSnapshot.key
-    CoursesList.push(childSnapshot.key)
-  });
-    io.on('connection', (socket) => {
-    console.log('on connection')
-    //Globals
-    var defaultRoom = 'general';
-    //Emit the rooms array
-    socket.emit('setup', {
-      rooms: CoursesList
-    });
-    //Listens for new user
-    socket.on('new user', (data) => {
-      console.log('on new user')
-      var Room = data.room || defaultRoom ;
-      //New user joins the default room
-      socket.join(Room);
-      //Tell all those in the room that a new user joined
-      io.in(Room).emit('user joined', data);
-      console.log('user: ', data.username ,' joined', Room, ' data', data )
-    });
-    //Listens for switch room
-    //Se crea nueva instancia
-    socket.on('switch room', (data) => {
-      console.log('switch room')
-      //Handles joining and leaving rooms
-      //console.log(data);
-      socket.leave(data.oldRoom);
-      socket.join(data.newRoom);
-      io.in(data.oldRoom).emit('user left', data);
-      io.in(data.newRoom).emit('user joined', data);
+// courses.on('value', (courses) => {
+//   courses.forEach((childSnapshot) => {
+//     //Here you can access  childSnapshot.key
+//     CoursesList.push(childSnapshot.key)
+//   });
+//     io.on('connection', (socket) => {
+//     console.log('on connection')
+//     //Globals
+//     var defaultRoom = 'general';
+//     //Emit the rooms array
+//     socket.emit('setup', {
+//       rooms: CoursesList
+//     });
+//     //Listens for new user
+//     socket.on('new user', (data) => {
+//       console.log('on new user')
+//       var Room = data.room || defaultRoom ;
+//       //New user joins the default room
+//       socket.join(Room);
+//       //Tell all those in the room that a new user joined
+//       io.in(Room).emit('user joined', data);
+//       console.log('user: ', data.username ,' joined', Room, ' data', data )
+//     });
+//     //Listens for switch room
+//     //Se crea nueva instancia
+//     socket.on('switch room', (data) => {
+//       console.log('switch room')
+//       //Handles joining and leaving rooms
+//       //console.log(data);
+//       socket.leave(data.oldRoom);
+//       socket.join(data.newRoom);
+//       io.in(data.oldRoom).emit('user left', data);
+//       io.in(data.newRoom).emit('user joined', data);
 
-    });
-    //Listens for a new chat message
-    socket.on('new message', (data) => {
-      console.log('new message')
-      //Crrear mensaje
-      var msg = {
-        username: data.username,
-        content: data.message,
-        room: data.room,
-        created: data.date,
-        avatar: data.avatar
-      };
-      var messageSaved = chats.child(data.room).push().set(msg)
-      users.child('chats/'+messageSaved.key).set(true)
-      console.log("msg:", msg, " message saved ", messageSaved.key)
-      //Save it to database
-      // newMsg.save(function(err, msg){
-      //Send message to those connected in the room
-      io.to(msg.room).emit('message created', msg);
-      console.log('message created to ' , msg.room)
-      // });
-    });
-    });
+//     });
+//     //Listens for a new chat message
+//     socket.on('new message', (data) => {
+//       console.log('new message')
+//       //Crrear mensaje
+//       var msg = {
+//         username: data.username,
+//         content: data.message,
+//         room: data.room,
+//         created: data.date,
+//         avatar: data.avatar
+//       };
+//       var messageSaved = chats.child(data.room).push().set(msg)
+//       users.child('chats/'+messageSaved.key).set(true)
+//       console.log("msg:", msg, " message saved ", messageSaved.key)
+//       //Save it to database
+//       // newMsg.save(function(err, msg){
+//       //Send message to those connected in the room
+//       io.to(msg.room).emit('message created', msg);
+//       console.log('message created to ' , msg.room)
+//       // });
+//     });
+//     });
 
-})
+// })
 
 
-router.post('/paymentStatus', function(req, res){
+app.post('/paymentStatus', function(req, res){
   var data = req.body;
 
   // res.json(data)
@@ -907,7 +910,7 @@ router.post('/paymentStatus', function(req, res){
 })
 
 
-router.post('/pagos', function(req, res){
+app.post('/pagos', function(req, res){
 
   console.log('---> ', req.body)
     var claveSecreta = 'EGrTtNnqJAszVFzdvA-32737939889'
@@ -971,7 +974,7 @@ res.send(md.digest().toHex())
 
 })
 
-router.get('/*', (req, res) => {
+app.get('/*', (req, res) => {
     var data = {
         intento: 'Andy',
         cosa:'blabla'
@@ -981,14 +984,14 @@ router.get('/*', (req, res) => {
 
 
 
-router.get('/chat/:classId', function(req, res){
+app.get('/chat/:classId', function(req, res){
  var classId = req.body.classId
 
 
 })
 
 
-router.get( '/test', function( req, res ) {
+app.get( '/test', function( req, res ) {
     var data = {
         intento: 'Andy',
         cosa:'blabla'
@@ -996,7 +999,7 @@ router.get( '/test', function( req, res ) {
     return res.render( path.join(__dirname, '../views/welcome.html'), data ) ;
 } ) ;
 
-router.post('/api/suscribed', function(req, res){
+app.post('/api/suscribed', function(req, res){
   console.log('body.data: ', typeof(req.body.data))
     var  emailInfo = JSON.parse(req.body.data) 
 
