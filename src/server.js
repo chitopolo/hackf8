@@ -246,7 +246,7 @@ function receivedMessage(event) {
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
 
-    sendTextMessage(senderID, "Quick reply tapped");
+    sendTextMessage(senderID, "We don't have anything planned for that distance, please we invite you to create a route of that size");
     return;
   }
 
