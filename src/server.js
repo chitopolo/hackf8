@@ -334,7 +334,7 @@ function receivedMessage(event) {
   sendTypingOn(senderID)
 setTimeout(function () {
             sendTextMessage(senderID, 'Let me find good routes nearby ');
-}, 1000)
+}, 3000)
             
 
 
@@ -345,21 +345,21 @@ setTimeout(function () {
 
 setTimeout(function () {
             sendSuggestions(senderID)
-}, 1000)
+}, 3000)
 
 
 
 
             setTimeout(function () {
             sendTextMessage(senderID, 'You can also filter by distance')
-            }, 1000)
+            }, 3000)
 
               sendTypingOn(senderID)
 
-              
+
             setTimeout(function () {
                 routeByDistance(senderID)
-            }, 1000)
+            }, 3000)
 
   }
 }
