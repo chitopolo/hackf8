@@ -588,18 +588,18 @@ function findRoutesInBolivia(recipientId) {
           template_type: "button",
           text: "Select the route type that you want",
           buttons:[{
-            type: "postbackMountains",
+            type: "postback",
             title: "Mountains",
-            payload: "DEVELOPER_DEFINED_PAYLOAD"
+            payload: "show me mountains"
 
           }, {
-            type: "postbackRoad",
+            type: "postback",
             title: "Road",
-            payload: "DEVELOPER_DEFINED_PAYLOAD"
+            payload: "show me roads"
           }, {
-            type: "postbackForest",
+            type: "postback",
             title: "Forest",
-            payload: "DEVELOPER_DEFINED_PAYLOAD"
+            payload: "show me forest"
           }]
         }
       }
@@ -630,24 +630,20 @@ function sendGenericMessage(recipientId) {
             title: "Mountains",
             subtitle: "Beautiful places that you won't even imagine they existed",
             item_url: "https://biciruta.azurewebsites.net/",               
-            image_url: "https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwid8qWQ3ebaAhUmwlQKHSQyBIkQjRx6BAgBEAU&url=https%3A%2F%2Fwww.redbull.com%2Fus-en%2Fmountain-biking-in-the-dolomites-val-gardena-guide&psig=AOvVaw2kWlhno2v3q1SXNTPXFKVY&ust=1525340182783875",
+            image_url: "https://image.redbull.com/rbcom/010/2016-02-16/1331777047411_1/0010/1/1600/1067/1/a-pair-of-mountain-bikers-riding-in-the-dolomites-range-in-noertheastern-italy.jpg",
             buttons: [{
               type: "postback",
-              title: "Montaña",
+              title: "Choose",
               payload: "Payload for first bubble",
             }],
           }, {
             title: "Road Bike",
             subtitle: "Road Biking for you and your family",
             item_url: "https://biciruta.azurewebsites.net/",               
-            image_url: "https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwj7mYel3-baAhXpq1QKHeH3ByUQjRx6BAgBEAU&url=https%3A%2F%2Fwww.rei.com%2Flearn%2Fexpert-advice%2Fhow-to-choose-road-bikes.html&psig=AOvVaw2CEu43eTpDpmZbSuFBfEsJ&ust=1525340763733628",
+            image_url: "https://www.rei.com/content/dam/images/Expert%20Advice/Migration/HeroImages/Content_022717_0709_Road_Bikes_Choose_lg.jpg",
             buttons: [{
-              type: "web_url",
-              url: "http://www.universiclick.com/curso/photoshop",
-              title: "Ir a la página"
-            }, {
               type: "postback",
-              title: "Ver más información",
+              title: "choose",
               payload: "Payload for second bubble",
             }]
           }]
