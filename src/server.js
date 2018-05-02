@@ -120,6 +120,9 @@ app.post('/webhook', function (req, res) {
 
 
 
+
+
+
 app.get('/authorize', function(req, res) {
   var accountLinkingToken = req.query.account_linking_token;
   var redirectURI = req.query.redirect_uri;
@@ -196,6 +199,24 @@ function receivedAuthentication(event) {
   sendTextMessage(senderID, "Authentication successful");
 }
 
+
+
+
+function hello(event) {
+  var senderID = event.sender.id;
+  var recipientID = event.recipient.id;
+  var timeOfAuth = event.timestamp;
+
+  // The 'ref' field is set in the 'Send to Messenger' plugin, in the 'data-ref'
+  // The developer can set this to an arbitrary value to associate the 
+  // authentication callback with the 'Send to Messenger' click event. This is
+  // a way to do account linking when the user clicks the 'Send to Messenger' 
+  // plugin.
+
+  // When an authentication is received, we'll send a message back to the sender
+  // to let them know it was successful.
+  sendTextMessage(senderID, "Hi, how can I help you");
+}
 /*
  * Message Event
  *
@@ -254,6 +275,10 @@ function receivedMessage(event) {
         sendImageMessage(senderID);
         break;
 
+        case 'hello':
+        hello(senderID);
+        break;
+
       case 'gif':
         sendGifMessage(senderID);
         break;
@@ -262,7 +287,7 @@ function receivedMessage(event) {
         sendAudioMessage(senderID);
         break;
 
-      case 'Find routes in San Francisco':
+      case 'Show me routes in San Francisco':
         findRoutesInSanFrancisco(senderID);
         break;
 
@@ -273,6 +298,9 @@ function receivedMessage(event) {
       case 'file':
         sendFileMessage(senderID);
         break;
+
+
+
 
       case 'button':
         sendButtonMessage(senderID);
@@ -288,10 +316,10 @@ function receivedMessage(event) {
 
 
 
-      case 'Routes by level':
+      case 'Show me routes by difficulty':
         routeByLevel(senderID);
         break;
-      case 'Routes by distance':
+      case 'Show me routes by distance':
         routeByDistance(senderID);
         break;  
 
@@ -334,32 +362,36 @@ function receivedMessage(event) {
   sendTypingOn(senderID)
 setTimeout(function () {
             sendTextMessage(senderID, 'Let me find good routes nearby ');
-}, 3000)
+}, 5000)
             
 
 
+setTimeout(function () {
 
   sendTypingOn(senderID)
+}, 5000)
 
             
 
 setTimeout(function () {
             sendSuggestions(senderID)
-}, 3000)
+}, 5000)
 
 
 
 
             setTimeout(function () {
             sendTextMessage(senderID, 'You can also filter by distance')
-            }, 3000)
+            }, 5000)
+setTimeout(function () {
 
               sendTypingOn(senderID)
+            }, 5000)
 
 
             setTimeout(function () {
                 routeByDistance(senderID)
-            }, 3000)
+            }, 5000)
 
   }
 }
@@ -459,6 +491,9 @@ function receivedAccountLink(event) {
   console.log("Received account link event with for user %d with status %s " +
     "and auth code %s ", senderID, status, authCode);
 }
+
+
+
 
 /*
  * Send an image using the Send API.
