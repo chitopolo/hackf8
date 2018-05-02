@@ -22,7 +22,7 @@ var drawPolyline = []
 
 const MapWithADrawingManager = compose(
   withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBdaG4W9-9ETMwF1WZcZxBnkvj6G2PKiL0&v=3.exp&libraries=geometry,drawing,places",
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyD_9cF-AlkPRFbnxyV51sTQkElB1KFCruM&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `800px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -222,7 +222,7 @@ return location
             polyline:that.state.polyline,
             actualLat:that.state.actualLat,
             actualLon:that.state.actualLon,
-            createdBy:that.state.userId,
+            createdBy:that.state.userId|| "Anonymus",
             image:false
           })
 
@@ -489,7 +489,7 @@ export class RoutesList extends Component {
 					<tbody>
 						{_.map(this.state.routes, function(value, key){
 							return <tr key={key}>
-						<td>{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive />}</td>
+						<td>{ value.image ? <Image src={value.image} responsive thumbnail/> :  <Image src="./../static/img/bicirutabw.png" responsive thumbnail style={{maxWidth:'200px'}}/>}</td>
 						<td>{value.title}</td>
 						<td>{value.distance}</td>
             <td>{value.description}</td>

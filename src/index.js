@@ -50,7 +50,7 @@ class Menu extends Component {
     <Navbar.Header>
       <Navbar.Brand>
       <a>
-        Biciruta</a>
+        HackF8-Biking</a>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
@@ -70,9 +70,6 @@ class Menu extends Component {
         <NavItem eventKey={4} >Salidas</NavItem>
     </LinkContainer>
 
-      <LinkContainer to="/mailingList">
-        <NavItem eventKey={5} >Mailing List</NavItem>
-    </LinkContainer>
 
 
 

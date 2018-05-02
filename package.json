@@ -1,13 +1,13 @@
 {
-  "name": "Refire",
+  "name": "hackf8",
   "version": "1.0.0",
-  "description": "Webinar React Firebase and node",
+  "description": "Facebook Hackathon Project",
   "scripts": {
     "start": "node ./src/server.js",
     "watch": "webpack --watch"
   },
   "main": "index.js",
-  "repository": "git@github.com:chitopolo/refire.git",
+  "repository": "",
   "author": "Rene J Polo",
   "license": "MIT",
   "dependencies": {

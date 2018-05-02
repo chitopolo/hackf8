@@ -1,8 +1,8 @@
 export const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyBdaG4W9-9ETMwF1WZcZxBnkvj6G2PKiL0",
-    authDomain: "biciruta-bo.firebaseapp.com",
-    databaseURL: "https://biciruta-bo.firebaseio.com",
-    projectId: "biciruta-bo",
-    storageBucket: "biciruta-bo.appspot.com",
-    messagingSenderId: "1034085240639"
+    apiKey: "AIzaSyBjJVHm74pPCfUzPY00Pt_K6_5SjCR6EAk",
+    authDomain: "hackf8-90fa9.firebaseapp.com",
+    databaseURL: "https://hackf8-90fa9.firebaseio.com",
+    projectId: "hackf8-90fa9",
+    storageBucket: "",
+    messagingSenderId: "173444818414"
   };
