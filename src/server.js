@@ -19,17 +19,17 @@ var MESSENGER_CONFIG = {
 var serverPort = process.env.PORT || 8080;
 
 
-if(node_env == 'development'){
-  var webpack = require('webpack');
+// if(node_env == 'development'){
+//   var webpack = require('webpack');
   
-    var config = require('./../webpack.config');
-    var compiler = webpack(config);
-     console.log('inside development')
-          app.use(require('webpack-dev-middleware')(compiler, {
-            publicPath: config.output.publicPath
-          }));
-     app.use(require('webpack-hot-middleware')(compiler));
-  }
+//     var config = require('./../webpack.config');
+//     var compiler = webpack(config);
+//      console.log('inside development')
+//           app.use(require('webpack-dev-middleware')(compiler, {
+//             publicPath: config.output.publicPath
+//           }));
+//      app.use(require('webpack-hot-middleware')(compiler));
+//   }
 
 
 
