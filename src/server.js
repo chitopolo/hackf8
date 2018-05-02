@@ -330,6 +330,11 @@ function receivedMessage(event) {
             var msg = "Thanks for sharing your location, lat : " + lat + " ,long : " + long + "\n" ;
 
             sendTextMessage(senderID, msg);
+            sendTypingOn(senderID)
+            
+            sendTextMessage(senderID, 'Let me find good routes nearby ');
+
+            sendTypingOn(senderID)
 
             sendSuggestions(senderID)
   }
