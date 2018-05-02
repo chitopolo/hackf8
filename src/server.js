@@ -332,20 +332,31 @@ function receivedMessage(event) {
             sendTextMessage(senderID, msg);
             
 setTimeout(function () {
-  console.log('wait')
+  sendTypingOn(senderID)
 }, 1000)
-            sendTypingOn(senderID)
+            
 
             sendTextMessage(senderID, 'Let me find good routes nearby ');
 
 
 setTimeout(function () {
-  console.log('wait')
+  sendTypingOn(senderID)
 }, 1000)
 
-            sendTypingOn(senderID)
+            
 
             sendSuggestions(senderID)
+
+
+            sendTextMessage(senderID, 'You can also filter by distance')
+
+
+            setTimeout(function () {
+              sendTypingOn(senderID)
+            }, 1000)
+
+            
+            routeByDistance(senderID)
   }
 }
 
