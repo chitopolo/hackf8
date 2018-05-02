@@ -291,7 +291,11 @@ function receivedMessage(event) {
         break;
       case 'Routes by distance':
         routeByDistance(senderID);
-        break;            
+        break;  
+
+        case '< 10 Miles'
+         lessThanTen(senderID)
+         break;          
 
       case 'read receipt':
         sendReadReceipt(senderID);
@@ -626,7 +630,41 @@ function findRoutesInBolivia(recipientId) {
   callSendAPI(messageData);
 
 
-  sendGenericMessage(recipientId)
+}
+
+
+function lessThanTen(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "Select the route type that you want",
+          buttons:[{
+            type: "postback",
+            title: "Mountains",
+            payload: "show me mountains"
+
+          }, {
+            type: "postback",
+            title: "Road",
+            payload: "show me roads"
+          }, {
+            type: "postback",
+            title: "Forest",
+            payload: "show me forest"
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+
 }
 
 /*
@@ -784,7 +822,7 @@ function routeByDistance(recipientId) {
       id: recipientId
     },
     message: {
-      text: "Chose a distance so I can show you some beautiful routes for the distance you wish",
+      text: "Choose a distance for suggestions.",
       quick_replies: [
         {
           "content_type":"text",
