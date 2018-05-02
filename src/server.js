@@ -202,21 +202,6 @@ function receivedAuthentication(event) {
 
 
 
-function hello(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfAuth = event.timestamp;
-
-  // The 'ref' field is set in the 'Send to Messenger' plugin, in the 'data-ref'
-  // The developer can set this to an arbitrary value to associate the 
-  // authentication callback with the 'Send to Messenger' click event. This is
-  // a way to do account linking when the user clicks the 'Send to Messenger' 
-  // plugin.
-
-  // When an authentication is received, we'll send a message back to the sender
-  // to let them know it was successful.
-  sendTextMessage(senderID, "Hi, how can I help you");
-}
 /*
  * Message Event
  *
@@ -275,8 +260,8 @@ function receivedMessage(event) {
         sendImageMessage(senderID);
         break;
 
-        case 'hello':
-        hello(senderID);
+        case 'Hello':
+          sendTextMessage(senderID, "Hi, how can I help you");
         break;
 
       case 'gif':
@@ -516,6 +501,9 @@ function sendImageMessage(recipientId) {
 
   callSendAPI(messageData);
 }
+
+
+
 
 /*
  * Send a Gif using the Send API.
