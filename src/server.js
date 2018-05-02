@@ -295,7 +295,7 @@ function receivedMessage(event) {
         routeByDistance(senderID);
         break;  
 
-        case '< 10 Miles'
+        case '< 10 Miles':
          lessThanTen(senderID)
          break;          
 
