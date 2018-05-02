@@ -23,17 +23,17 @@ var MESSENGER_CONFIG = {
 app.set('host', process.env.HOST || 'localhost');
 app.set('port', process.env.PORT || 8080);
 
-// if(node_env == 'development'){
-//   var webpack = require('webpack');
+if(node_env == 'development'){
+  var webpack = require('webpack');
 
-//     var config = require('./../webpack.config');
-//     var compiler = webpack(config);
-//      console.log('inside development')
-//           app.use(require('webpack-dev-middleware')(compiler, {
-//             publicPath: config.output.publicPath
-//           }));
-//      app.use(require('webpack-hot-middleware')(compiler));
-//   }
+    var config = require('./../webpack.config');
+    var compiler = webpack(config);
+     console.log('inside development')
+          app.use(require('webpack-dev-middleware')(compiler, {
+            publicPath: config.output.publicPath
+          }));
+     app.use(require('webpack-hot-middleware')(compiler));
+  }
 
 
 
@@ -313,9 +313,22 @@ function receivedMessage(event) {
         sendTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
+     var lat = null;
+            var long = null;
+            if(messageAttachments[0].payload.coordinates)
+            {
+                lat = messageAttachments[0].payload.coordinates.lat;
+                long = messageAttachments[0].payload.coordinates.long;
+            }
+
+            var msg = "lat : " + lat + " ,long : " + long + "\n";
+
+            sendTextMessage(senderID, msg);
   }
 }
+
+
+
 
 
 /*
@@ -342,6 +355,10 @@ function receivedDeliveryConfirmation(event) {
 
   console.log("All message before %d were delivered.", watermark);
 }
+
+
+
+
 
 
 /*
