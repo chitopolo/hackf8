@@ -262,8 +262,8 @@ function receivedMessage(event) {
         sendAudioMessage(senderID);
         break;
 
-      case 'find routes in bolivia':
-        findRoutesInBolivia(senderID);
+      case 'Find routes in San Francisco':
+        findRoutesInSanFrancisco(senderID);
         break;
 
       case 'video':
@@ -285,6 +285,8 @@ function receivedMessage(event) {
       case 'receipt':
         sendReceiptMessage(senderID);
         break;
+
+
 
       case 'Routes by level':
         routeByLevel(senderID);
@@ -325,9 +327,11 @@ function receivedMessage(event) {
                 long = messageAttachments[0].payload.coordinates.long;
             }
 
-            var msg = "lat : " + lat + " ,long : " + long + "\n";
+            var msg = "Thanks for sharing your location, lat : " + lat + " ,long : " + long + "\n" ;
 
             sendTextMessage(senderID, msg);
+
+            sendSuggestions(senderID)
   }
 }
 
@@ -515,6 +519,57 @@ function sendVideoMessage(recipientId) {
   callSendAPI(messageData);
 }
 
+
+
+function sendSuggestions(recipientId){
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "Market",
+            subtitle: "Beautiful places that you won't even imagine they existed",
+            item_url: "https://biciruta.azurewebsites.net/route/-LBTv_rcwm7_v7i_9d-s",               
+            image_url: "https://image.redbull.com/rbcom/010/2016-02-16/1331777047411_1/0010/1/1600/1067/1/a-pair-of-mountain-bikers-riding-in-the-dolomites-range-in-noertheastern-italy.jpg",
+            buttons: [{
+              type: "postback",
+              title: "Choose",
+              payload: "Payload for first bubble",
+            }],
+          }, {
+            title: "Crown",
+            subtitle: "Road Biking for you and your family",
+            item_url: "https://biciruta.azurewebsites.net/route/-LBVJzEcfns-NVzmgNQ6",               
+            image_url: "https://www.rei.com/content/dam/images/Expert%20Advice/Migration/HeroImages/Content_022717_0709_Road_Bikes_Choose_lg.jpg",
+            buttons: [{
+              type: "postback",
+              title: "choose",
+              payload: "Payload for second bubble",
+            }]
+          }, {
+            title: "Golden gate",
+            subtitle: "Road Biking for you and your family",
+            item_url: "https://biciruta.azurewebsites.net/route/-LBVO6-oqzEQP9R1Rj4A",               
+            image_url: "https://www.rei.com/content/dam/images/Expert%20Advice/Migration/HeroImages/Content_022717_0709_Road_Bikes_Choose_lg.jpg",
+            buttons: [{
+              type: "postback",
+              title: "choose",
+              payload: "Payload for second bubble",
+            }]
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
 /*
  * Send a file using the Send API.
  *
@@ -597,7 +652,7 @@ function sendButtonMessage(recipientId) {
  * Send a button message using the Send API.
  *
  */
-function findRoutesInBolivia(recipientId) {
+function findRoutesInSanFrancisco(recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
